@@ -40,8 +40,15 @@ class getInfo(Resource):
         cursor.execute("select char_name,account_name,charId,`level` from characters WHERE account_name=%s;", userAcc)
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
+class getMoneyCount(Resource):
+    def get(self):
+        userCharId = request.args.get('charId')
+        cursor.execute("select count from items WHERE owner_id=%s and item_id=57;", userCharId)
+
 # Routes
 api.add_resource(getInfo, '/getInfo')
+api.add_resource(getMoneyCount, '/getMoneyCount')
 
 # Serve the high performance http server
 if __name__ == '__main__':
