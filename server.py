@@ -55,7 +55,7 @@ class register(Resource):
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
         cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
-        return jsonify(data=cursor.fetchall())
+        return jsonify(data=cursorLG.fetchall())
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
