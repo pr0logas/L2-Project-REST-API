@@ -44,7 +44,7 @@ class getInfo(Resource):
 class getMoneyCount(Resource):
     def get(self):
         userCharId = int(request.args.get('charId'))
-        cursor.execute("select count from items WHERE item_id=57 and owner_id=%i;", userCharId)
+        cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
 # Routes
