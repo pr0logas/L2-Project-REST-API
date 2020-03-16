@@ -37,7 +37,7 @@ def checkInvalidChars(value):
 class getInfo(Resource):
     def get(self):
         userAcc = request.args.get('account')
-        cursor.execute("select char_name,account_name,charId,`level` from characters WHERE account_name=%s;", userAcc)
+        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
@@ -47,9 +47,18 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/register?user=test&passw=test
+class register(Resource):
+    def get(self):
+        user = str(request.args.get('user'))
+        passw = str(request.args.get('passw'))
+        cursor.execute("insert into accounts (login), (password) values %s, %s;", user, passw)
+        return jsonify(data=cursor.fetchall())
+
 # Routes
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
+api.add_resource(register, '/register')
 
 # Serve the high performance http server
 if __name__ == '__main__':
