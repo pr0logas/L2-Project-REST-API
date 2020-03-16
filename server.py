@@ -52,7 +52,7 @@ class register(Resource):
     def get(self):
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
-        cursor.execute("insert into accounts (login, password) values (%s, %s);", user, passw)
+        cursor.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
         return jsonify(data=cursor.fetchall())
 
 # Routes
