@@ -33,10 +33,11 @@ def checkInvalidChars(value):
     else:
         return 'FAIL'
 
-# http://127.0.0.1:9005/apiv1/getInfo
+# http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
 class getInfo(Resource):
     def get(self):
-        cursor.execute("select char_name,account_name,charId,`level` from characters;")
+        userAcc = request.args.get('account')
+        cursor.execute("select char_name,account_name,charId,`level` from characters WHERE account_name=%s;", userAcc")
         return jsonify(data=cursor.fetchall())
 
 # Routes
