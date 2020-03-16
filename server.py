@@ -13,7 +13,9 @@ from pymysql.cursors import DictCursor
 notFound = json.loads('{"ERROR" : "No data found"}')
 
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'] )
+con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'] )
 cursor = con.cursor(DictCursor)
+cursorLG = con2.cursor(DictCursor)
 
 def get_real_ip():
     print (str(request.remote_addr) + ' Client initiated request ->')
@@ -52,7 +54,7 @@ class register(Resource):
     def get(self):
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
-        cursor.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
+        cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
         return jsonify(data=cursor.fetchall())
 
 # Routes
