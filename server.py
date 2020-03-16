@@ -43,8 +43,9 @@ class getInfo(Resource):
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
 class getMoneyCount(Resource):
     def get(self):
-        userCharId = request.args.get('charId')
-        cursor.execute("select count from items WHERE item_id=57 and owner_id=%i;", int(userCharId))
+        userCharId = int(request.args.get('charId'))
+        cursor.execute("select count from items WHERE item_id=57 and owner_id=%i;", userCharId)
+        return jsonify(data=cursor.fetchall())
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
