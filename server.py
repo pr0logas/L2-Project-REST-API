@@ -44,7 +44,7 @@ class getInfo(Resource):
 class getMoneyCount(Resource):
     def get(self):
         userCharId = request.args.get('charId')
-        cursor.execute("select count from items WHERE owner_id=%s;", userCharId)
+        cursor.execute("select count from items WHERE item_id=57 and owner_id=%i;", int(userCharId))
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
