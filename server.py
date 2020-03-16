@@ -7,11 +7,12 @@ from gevent.pywsgi import WSGIServer
 from time import gmtime, strftime
 import urllib.request
 import re
+from auth import credentials
 from pymysql.cursors import DictCursor
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 
-con = pymysql.connect("127.0.0.1","root","","test" )
+con = pymysql.connect(credentials[ip],credentials[user],credentials[passw],credentials[db] )
 cursor = con.cursor(DictCursor)
 
 def get_real_ip():
@@ -32,7 +33,7 @@ def checkInvalidChars(value):
     else:
         return 'FAIL'
 
-# http://127.0.0.1:5000/apiv1/getInfo
+# http://127.0.0.1:9005/apiv1/getInfo
 class getInfo(Resource):
     def get(self):
         cursor.execute("select char_name,account_name,charId,`level` from characters;")
