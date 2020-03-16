@@ -37,7 +37,7 @@ def checkInvalidChars(value):
 class getInfo(Resource):
     def get(self):
         userAcc = request.args.get('account')
-        cursor.execute("select char_name,account_name,charId,`level` from characters WHERE account_name=%s;", userAcc")
+        cursor.execute("select char_name,account_name,charId,`level` from characters WHERE account_name=%s;", userAcc)
         return jsonify(data=cursor.fetchall())
 
 # Routes
