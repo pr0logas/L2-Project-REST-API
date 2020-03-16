@@ -12,7 +12,7 @@ from pymysql.cursors import DictCursor
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 
-con = pymysql.connect(credentials[ip],credentials[user],credentials[passw],credentials[db] )
+con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'] )
 cursor = con.cursor(DictCursor)
 
 def get_real_ip():
