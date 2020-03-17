@@ -55,8 +55,8 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
-# http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=t540215452
-class sellAdena(Resource):
+# http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=t540215452
+class adenaCount(Resource):
     def get(self):
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
@@ -80,7 +80,7 @@ api.add_resource(getInfo, '/getInfo')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
 api.add_resource(register, '/register')
-api.add_resource(sellAdena, '/sellAdena')
+api.add_resource(adenaCount, '/adenaCount')
 
 # Serve the high performance http server
 if __name__ == '__main__':
