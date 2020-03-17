@@ -61,8 +61,8 @@ class sellAdena(Resource):
         owner_id = str(request.args.get('account'))
         count = int(request.args.get('count'))
         token = int(request.args.get('token'))
-            if token != None:
-                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
+        if token != None:
+            cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
 
         return jsonify(data=cursor.fetchall())
 
