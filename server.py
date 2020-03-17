@@ -12,8 +12,8 @@ from pymysql.cursors import DictCursor
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 
-con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'] )
-con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'] )
+con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
+con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
 cursor = con.cursor(DictCursor)
 cursorLG = con2.cursor(DictCursor)
 
@@ -35,8 +35,14 @@ def checkInvalidChars(value):
     else:
         return 'FAIL'
 
-# http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
+# http://127.0.0.1:9005/apiv1/getInfo
 class getInfo(Resource):
+    def get(self):
+        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters")
+        return jsonify(data=cursor.fetchall())
+
+# http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
+class getUserInfo(Resource):
     def get(self):
         userAcc = request.args.get('account')
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
@@ -49,6 +55,16 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/sellAdena?account=test&count=1234&token=t540215452
+class sellAdena(Resource):
+    def get(self):
+        userAcc = str(request.args.get('account'))
+        token = int(request.args.get('token'))
+        count = int(request.args.get('count'))
+
+        cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
+        return jsonify(data=cursorLG.fetchall())
+
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test
 class register(Resource):
     def get(self):
@@ -59,8 +75,10 @@ class register(Resource):
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
+api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
 api.add_resource(register, '/register')
+api.add_resource(sellAdena, '/sellAdena')
 
 # Serve the high performance http server
 if __name__ == '__main__':
