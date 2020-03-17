@@ -58,7 +58,7 @@ class getMoneyCount(Resource):
 # http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=t540215452
 class sellAdena(Resource):
     def get(self):
-        owner_id = str(request.args.get('account'))
+        owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
         token = int(request.args.get('token'))
         if token != None:
