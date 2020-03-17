@@ -6,7 +6,7 @@ from flask_restful import Resource, Api
 from gevent.pywsgi import WSGIServer
 from time import gmtime, strftime
 import urllib.request
-import re
+import re, time
 from auth import credentials
 from pymysql.cursors import DictCursor
 
@@ -55,7 +55,7 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
-# http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=t540215452
+# http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=540215452
 class adenaCount(Resource):
     def get(self):
         owner_id = str(request.args.get('owner'))
