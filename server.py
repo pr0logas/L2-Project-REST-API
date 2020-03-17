@@ -55,15 +55,17 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
-# http://127.0.0.1:9005/apiv1/sellAdena?account=test&count=1234&token=t540215452
+# http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=t540215452
 class sellAdena(Resource):
     def get(self):
-        userAcc = str(request.args.get('account'))
-        token = int(request.args.get('token'))
+        owner_id = str(request.args.get('account'))
         count = int(request.args.get('count'))
+        token = int(request.args.get('token'))
+            if token != None:
+                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
 
-        cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
-        return jsonify(data=cursorLG.fetchall())
+        return jsonify(data=cursor.fetchall())
+
 
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test
 class register(Resource):
