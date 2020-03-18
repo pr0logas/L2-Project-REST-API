@@ -83,7 +83,7 @@ class sellAdena(Resource):
             cursorLG.execute("select password from accounts WHERE login=%s;", account)
             userCheck = cursorLG.fetchall()
 
-            print(userCheck[0]['password'])
+            print(userCheck)
 
             if userCheck[0]['password'] == token:
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
