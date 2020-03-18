@@ -72,16 +72,16 @@ class adenaCount(Resource):
         return jsonify(data=cursor.fetchall())
 
 
-# http://127.0.0.1:9005/apiv1/register?user=test&passw=test&mail=info@adeptio.cc
+# http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt
 class register(Resource):
 
     def get(self):
         already = json.loads('{"ERROR" : "User already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
         success = json.loads('{"SUCCESS" : "Registration successful"}')
-        user = str(request.args.get)
-        passw = str(request.args.get)
-        mail = str(request.args.get)
+        user = str(request.args.get('user'))
+        passw = str(request.args.get('passw'))
+        mail = str(request.args.get('email'))
         regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
 
