@@ -9,6 +9,7 @@ import urllib.request
 import re, time
 from auth import credentials
 from pymysql.cursors import DictCursor
+import hashlib, base64
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 
@@ -72,7 +73,8 @@ class register(Resource):
     def get(self):
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
-        cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, passw))
+        hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
+        cursorLG.execute("insert into accounts (login, password) values (%s, %s);", (user, hashBase64))
         return jsonify(data=cursorLG.fetchall())
 
 # Routes
