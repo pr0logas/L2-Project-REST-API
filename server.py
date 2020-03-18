@@ -78,7 +78,7 @@ class buyAdena(Resource):
         adeptioCountStatus = cursorLG.fetchall()
 
         print(adeptioCountStatus)
-        print(adeptioCountStatus[0]['online'])
+        print(adeptioCountStatus[0]['count'])
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
