@@ -40,6 +40,7 @@ def checkInvalidChars(value):
 class getInfo(Resource):
     def get(self):
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters")
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
@@ -47,6 +48,7 @@ class getUserInfo(Resource):
     def get(self):
         userAcc = request.args.get('account')
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
@@ -54,6 +56,7 @@ class getMoneyCount(Resource):
     def get(self):
         userCharId = int(request.args.get('charId'))
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=540215452
@@ -64,6 +67,7 @@ class adenaCount(Resource):
         token = int(request.args.get('token'))
         if token != None:
             cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
+            cursor.close()
 
         return jsonify(data=cursor.fetchall())
 
@@ -72,6 +76,7 @@ class adenaCount(Resource):
 class register(Resource):
     def get(self):
         check = False
+        already = json.loads('{"ERROR" : "User already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
         success = json.loads('{"SUCCESS" : "Registration successful"}')
         user = str(request.args.get('user'))
@@ -96,8 +101,12 @@ class register(Resource):
 
         # Query start
         if check == True:
-            cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-            return jsonify(data=success)
+            try:
+                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                cursorLG.close()
+                return jsonify(data=success)
+            except:
+                return jsonify(data=already)
         else:
             return jsonify(data=fail)
 
