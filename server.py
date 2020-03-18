@@ -77,6 +77,8 @@ class buyAdena(Resource):
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s", owner_id)
         adeptioCountStatus = cursorLG.fetchall()
 
+        print(onlineStatus)
+        print(onlineStatus[0]['online'])
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
