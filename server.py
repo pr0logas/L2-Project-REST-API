@@ -73,6 +73,7 @@ class sellAdena(Resource):
         onlineStatus = cursor.fetchall()
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
+        print(adenaCountStatus)
 
         if onlineStatus[0]['online'] != 0:
             print(onlineStatus[0]['online'])
