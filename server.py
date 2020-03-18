@@ -98,6 +98,7 @@ class register(Resource):
         if (re.search(regex, mail)):
             check = True
         else:
+            print(mail)
             print('Invalid email > check failed')
             check = False
 
