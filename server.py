@@ -86,7 +86,7 @@ class register(Resource):
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
 
         # Query start
-        if user == '' or passw == '' or user == None or passw == None:
+        if user != '' or passw != '':
             if (re.search(regex, mail)):
                 try:
                     cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
