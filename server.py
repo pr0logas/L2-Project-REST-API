@@ -85,30 +85,16 @@ class register(Resource):
         regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
 
-        check = False
-
-        # Not null inputs
-        if user == '' or passw == '' or mail == '' or user == None or passw == None or mail == None:
-            print('Invalid input > check failed')
-            check = False
-        else:
-            check = True
-
-        # Valid email?
-        if (re.search(regex, mail)):
-            check = True
-        else:
-            print(mail)
-            print('Invalid email > check failed')
-            check = False
-
         # Query start
-        if check == True:
-            try:
-                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-                return jsonify(data=success)
-            except:
-                return jsonify(data=already)
+        if user == '' or passw == '' or mail == '' or user == None or passw == None or mail == None:
+            if (re.search(regex, mail)):
+                try:
+                    cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                    return jsonify(data=success)
+                except:
+                    return jsonify(data=already)
+            else:
+                return jsonify(data=fail)
         else:
             return jsonify(data=fail)
 
