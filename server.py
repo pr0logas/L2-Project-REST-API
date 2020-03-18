@@ -59,25 +59,36 @@ class getMoneyCount(Resource):
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
-# http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=540215452
-class adenaCount(Resource):
+# http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=540215452&account=adeptio
+class sellAdena(Resource):
     def get(self):
+        auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
+        adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
+        account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
         token = int(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
-        status = cursor.fetchall()
+        onlineStatus = cursor.fetchall()
+        cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
+        adenaCountStatus = cursor.fetchall()
 
-        if status[0]['online'] != 0:
-            print(status[0]['online'])
+        if onlineStatus[0]['online'] != 0:
+            print(onlineStatus[0]['online'])
             return jsonify(data=loggedin)
+        elif adenaCountStatus < count:
+            return jsonify(data=adenaFail)
         else:
-            if token != None:
+            cursorLG.execute("select password from accounts WHERE login=%s;", account)
+            userCheck = cursorLG.fetchall()
+
+            if token != '' and userCheck[0]['password'] == token:
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
                 return jsonify(data=cursor.fetchall())
-
-
+            else:
+                print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
+                return jsonify(data=auth)
 
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt
 class register(Resource):
@@ -114,7 +125,7 @@ api.add_resource(getInfo, '/getInfo')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
 api.add_resource(register, '/register')
-api.add_resource(adenaCount, '/adenaCount')
+api.add_resource(sellAdena, '/sellAdena')
 
 # Serve the high performance http server
 if __name__ == '__main__':
