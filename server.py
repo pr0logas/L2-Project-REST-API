@@ -1,12 +1,9 @@
-import pymysql
+import pymysql, re
 from flask import Flask, request, jsonify, json
 from flask_limiter import Limiter
 from werkzeug.contrib.fixers import ProxyFix
 from flask_restful import Resource, Api
 from gevent.pywsgi import WSGIServer
-from time import gmtime, strftime
-import urllib.request
-import re, time
 from auth import credentials
 from pymysql.cursors import DictCursor
 import hashlib, base64
@@ -63,7 +60,6 @@ class getMoneyCount(Resource):
     def get(self):
         userCharId = int(request.args.get('charId'))
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
-        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 
