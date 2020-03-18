@@ -76,7 +76,7 @@ class register(Resource):
         passw = str(request.args.get('passw'))
         mail = str(request.args.get('mail'))
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
-        if user != '' and passw != '' and mail != '':
+        if user != '' and passw != '' and mail != '' and mail != None and user != None:
             cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
             return jsonify(data=cursorLG.fetchall())
         else:
