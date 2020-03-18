@@ -51,6 +51,13 @@ class getUserInfo(Resource):
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
+class getAdeptioUserInfo(Resource):
+    def get(self):
+        userAcc = request.args.get('account')
+        cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", userAcc)
+        return jsonify(data=cursorLG.fetchall())
+
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
 class getMoneyCount(Resource):
     def get(self):
@@ -105,6 +112,8 @@ class buyAdena(Resource):
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
                 return jsonify(data=auth)
+
+
 
 
 # http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=540215452&account=adeptio
@@ -184,6 +193,7 @@ class register(Resource):
 # Routes
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getUserInfo, '/getUserInfo')
+api.add_resource(getAdeptioUserInfo, '/getAdeptioUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
 api.add_resource(register, '/register')
 api.add_resource(sellAdena, '/sellAdena')
