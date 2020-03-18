@@ -73,6 +73,7 @@ class register(Resource):
     def get(self):
         check = False
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
+        success = json.loads('{"SUCCESS" : "Registration successful"}')
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
         mail = str(request.args.get('email'))
@@ -96,11 +97,9 @@ class register(Resource):
         # Query start
         if check == True:
             cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-            return jsonify(data=cursorLG.fetchall())
+            return jsonify(data=success)
         else:
             return jsonify(data=fail)
-
-
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
