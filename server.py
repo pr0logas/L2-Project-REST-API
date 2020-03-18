@@ -74,7 +74,7 @@ class buyAdena(Resource):
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
-        cursorLG.execute("select balance from adeptio_balances WHERE login=%s", owner_id)
+        cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
         adeptioCountStatus = cursorLG.fetchall()
 
         print(adeptioCountStatus)
