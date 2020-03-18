@@ -94,8 +94,10 @@ class register(Resource):
                 except:
                     return jsonify(data=already)
             else:
+                print("Failed mail check")
                 return jsonify(data=fail)
         else:
+            print("Failed username/password check")
             return jsonify(data=fail)
 
 # Routes
