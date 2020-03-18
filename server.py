@@ -62,12 +62,13 @@ class getMoneyCount(Resource):
 # http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=540215452
 class adenaCount(Resource):
     def get(self):
-        loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Korona server first"}')
+        loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
         token = int(request.args.get('token'))
         check = cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         if check != 0:
+            print(check)
             return jsonify(data=loggedin)
         else:
             if token != None:
