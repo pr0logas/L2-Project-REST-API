@@ -76,6 +76,7 @@ class adenaCount(Resource):
 class register(Resource):
     def get(self):
         check = False
+        already = json.loads('{"ERROR" : "User already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
         success = json.loads('{"SUCCESS" : "Registration successful"}')
         user = str(request.args.get('user'))
@@ -100,9 +101,13 @@ class register(Resource):
 
         # Query start
         if check == True:
-            cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-            cursorLG.close()
-            return jsonify(data=success)
+            try:
+                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                return jsonify(data=success)
+            except:
+                return jsonify(data=already)
+            finally:
+                cursorLG.close()
         else:
             return jsonify(data=fail)
 
