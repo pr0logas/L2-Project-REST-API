@@ -40,7 +40,6 @@ def checkInvalidChars(value):
 class getInfo(Resource):
     def get(self):
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters")
-        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
@@ -48,7 +47,6 @@ class getUserInfo(Resource):
     def get(self):
         userAcc = request.args.get('account')
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
-        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
@@ -66,7 +64,7 @@ class sellAdena(Resource):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
-        adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At lease 1000 required"}')
+        adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At least 1000 required"}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
