@@ -83,7 +83,7 @@ class register(Resource):
         if user == '' or passw == '' or mail == '' or user == None or passw == None or mail == None:
             print('Invalid input > check failed')
             check = False
-        else
+        else:
             check = True
 
         # Valid email?
