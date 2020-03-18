@@ -86,7 +86,7 @@ class register(Resource):
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
 
         # Query start
-        if user == '' or passw == '' or mail == '' or user == None or passw == None or mail == None:
+        if user == '' or passw == '' or user == None or passw == None:
             if (re.search(regex, mail)):
                 try:
                     cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
@@ -95,9 +95,11 @@ class register(Resource):
                     return jsonify(data=already)
             else:
                 print("Failed mail check")
+                print(mail)
                 return jsonify(data=fail)
         else:
             print("Failed username/password check")
+            print(user, passw)
             return jsonify(data=fail)
 
 # Routes
