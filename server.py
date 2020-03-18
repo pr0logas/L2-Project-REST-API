@@ -94,11 +94,12 @@ class buyAdena(Resource):
                 cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                 checkCurrentAdena = cursor.fetchall()
                 setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
-                adeptioToSet = float(int(count) / adeptio_BuyRate)
+                adeptioToSet = float(float(count) / float(adeptio_BuyRate))
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
                 setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
+                print(setAdeptioFinal)
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
                 return jsonify(data=success)
             else:
@@ -139,11 +140,11 @@ class sellAdena(Resource):
 
             if userCheck[0]['password'] == token:
                 setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
-                adeptioTopay = int(count / adeptio_rate)
+                adeptioTopay = float(count / adeptio_rate)
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
-                setAdeptioFinal = int((int(checkBalance[0]['balance']) + int(adeptioTopay)))
+                setAdeptioFinal = float((int(checkBalance[0]['balance']) + float(adeptioTopay)))
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
                 return jsonify(data=success)
             else:
