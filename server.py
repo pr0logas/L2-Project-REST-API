@@ -73,10 +73,9 @@ class sellAdena(Resource):
         onlineStatus = cursor.fetchall()
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
-        print(adenaCountStatus)
 
-        if onlineStatus[0]['online'] != 0:
-            print(onlineStatus[0]['online'])
+        if onlineStatus[0]['count'] != 0:
+            print(onlineStatus[0]['count'])
             return jsonify(data=loggedin)
         elif int(adenaCountStatus) < int(count): # Check if user have enough adena to sell
             return jsonify(data=adenaFail)
