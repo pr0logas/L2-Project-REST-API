@@ -94,11 +94,11 @@ class buyAdena(Resource):
                 cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                 checkCurrentAdena = cursor.fetchall()
                 setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
-                adeptioToSet = float(count / adeptio_BuyRate)
+                adeptioToSet = float(int(count) / adeptio_BuyRate)
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
-                setAdeptioFinal = int((int(checkBalance[0]['balance']) - float(adeptioToSet)))
+                setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
                 return jsonify(data=success)
             else:
