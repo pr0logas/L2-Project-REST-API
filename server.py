@@ -74,6 +74,8 @@ class sellAdena(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
 
+        print(onlineStatus[0]['count'])
+
         if onlineStatus[0]['count'] != 0:
             print(onlineStatus[0]['count'])
             return jsonify(data=loggedin)
