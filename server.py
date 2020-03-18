@@ -79,6 +79,8 @@ class sellAdena(Resource):
             return jsonify(data=loggedin)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
             return jsonify(data=adenaFail)
+        elif account == '':
+            return jsonify(data=auth)
         else:
             cursorLG.execute("select password from accounts WHERE login=%s;", account)
             userCheck = cursorLG.fetchall()
