@@ -46,7 +46,7 @@ class getInfo(Resource):
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
 class getUserInfo(Resource):
     def get(self):
-        userAcc = request.args.get('account'))
+        userAcc = request.args.get('account')
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         cursor.close()
         return jsonify(data=cursor.fetchall())
