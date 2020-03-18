@@ -12,6 +12,7 @@ from pymysql.cursors import DictCursor
 import hashlib, base64
 
 notFound = json.loads('{"ERROR" : "No data found"}')
+adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
 
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
 con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
@@ -68,6 +69,7 @@ class sellAdena(Resource):
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
+        adeptio_balance = int(count / adeptio_rate)
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
@@ -88,6 +90,7 @@ class sellAdena(Resource):
 
             if userCheck[0]['password'] == token:
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
+                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, adeptio_balance))
                 return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
