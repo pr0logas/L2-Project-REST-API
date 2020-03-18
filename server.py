@@ -62,14 +62,18 @@ class getMoneyCount(Resource):
 # http://127.0.0.1:9005/apiv1/adenaCount?owner=268481220&count=1234&token=540215452
 class adenaCount(Resource):
     def get(self):
+        loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Korona server first"}')
         owner_id = str(request.args.get)
         count = int(request.args.get)
         token = int(request.args.get)
-        if token != None:
-            cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
-            cursor.close()
+        check = cursor.execute("select online from characters WHERE char_id=%s;", owner_id)
+        if check != 0:
+            return jsonify(data=loggedin)
+        else:
+            if token != None:
+                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
+                return jsonify(data=cursor.fetchall())
 
-        return jsonify(data=cursor.fetchall())
 
 
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt
@@ -95,11 +99,11 @@ class register(Resource):
                     return jsonify(data=already)
             else:
                 print("Failed mail check")
-                print('email: %s', mail)
+                print('email: ', mail)
                 return jsonify(data=fail)
         else:
             print("Failed username/password check")
-            print('user/passw: %s / %s ', user, passw)
+            print('user/passw: ', user, passw)
             return jsonify(data=fail)
 
 # Routes
