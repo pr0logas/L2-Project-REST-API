@@ -66,6 +66,7 @@ class sellAdena(Resource):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
+        adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At lease 1000 required"}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
@@ -78,7 +79,7 @@ class sellAdena(Resource):
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
         elif int(adenaCountStatus[0]['count']) <= 1000: # Check if user have enough adena to sell
-            return jsonify(data=adenaFail)
+            return jsonify(data=adenaFail2)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
             return jsonify(data=adenaFail)
         elif account == '':
