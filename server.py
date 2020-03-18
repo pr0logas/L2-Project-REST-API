@@ -95,6 +95,7 @@ class buyAdena(Resource):
                 checkCurrentAdena = cursor.fetchall()
                 setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
                 adeptioToSet = int(count / adeptio_BuyRate)
+                print(count, adeptioToSet, adeptio_BuyRate)
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
