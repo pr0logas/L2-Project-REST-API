@@ -106,10 +106,7 @@ class register(Resource):
                 print(res)
                 return jsonify(data=success)
             except:
-                print(res)
                 return jsonify(data=already)
-            finally:
-                cursorLG.close()
         else:
             return jsonify(data=fail)
 
