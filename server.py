@@ -102,9 +102,11 @@ class register(Resource):
         # Query start
         if check == True:
             try:
-                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                res = cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                print(res)
                 return jsonify(data=success)
             except:
+                print(res)
                 return jsonify(data=already)
             finally:
                 cursorLG.close()
