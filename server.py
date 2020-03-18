@@ -95,11 +95,11 @@ class register(Resource):
                     return jsonify(data=already)
             else:
                 print("Failed mail check")
-                print('email: 'mail)
+                print('email: %s', mail)
                 return jsonify(data=fail)
         else:
             print("Failed username/password check")
-            print('user/passw: 'user, passw)
+            print('user/passw: %s / %s ', user, passw)
             return jsonify(data=fail)
 
 # Routes
