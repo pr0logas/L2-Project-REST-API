@@ -69,7 +69,7 @@ class sellAdena(Resource):
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
-        token = int(request.args.get('token'))
+        token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
@@ -84,8 +84,6 @@ class sellAdena(Resource):
         else:
             cursorLG.execute("select password from accounts WHERE login=%s;", account)
             userCheck = cursorLG.fetchall()
-
-            print(userCheck)
 
             if userCheck[0]['password'] == token:
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
