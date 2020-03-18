@@ -13,6 +13,7 @@ import hashlib, base64
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
+adeptio_BuyRate = 600 # Set 1 Adeptio(ADE) = 600 ADE
 
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
 con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
@@ -26,7 +27,7 @@ def get_real_ip():
 # Flask rules
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
-limiter = Limiter(app, key_func=get_real_ip, default_limits=["10/minute"])
+limiter = Limiter(app, key_func=get_real_ip, default_limits=["20/minute"])
 app.url_map.strict_slashes = False
 api = Api(app, prefix="/apiv1")
 
@@ -57,6 +58,54 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         cursor.close()
         return jsonify(data=cursor.fetchall())
+
+
+# http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
+class buyAdena(Resource):
+    def get(self):
+        success = json.loads('{"SUCCESS" : "Operation was successful"}')
+        auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
+        adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
+        adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
+        account = str(request.args.get('account'))
+        owner_id = str(request.args.get('owner'))
+        count = int(request.args.get('count'))
+        token = str(request.args.get('token'))
+        cursor.execute("select online from characters WHERE charId=%s;", owner_id)
+        onlineStatus = cursor.fetchall()
+        cursor.execute("select balance from adeptio_balances WHERE login=%s", owner_id)
+        adeptioCountStatus = cursor.fetchall()
+
+
+        if onlineStatus[0]['online'] != 0:
+            return jsonify(data=loggedin)
+        elif int(adeptioCountStatus[0]['count']) >= 1: # Check if user have enough Adeptio(ADE) to sell
+            return jsonify(data=adeptioFail2)
+        elif int(adeptioCountStatus[0]['count']) > int(count): # Check if user have enough Adeptio(ADE) to sell
+            return jsonify(data=adeptioFail)
+        elif account == '':
+            return jsonify(data=auth)
+        else:
+            # Start checking user passw
+            cursorLG.execute("select password from accounts WHERE login=%s;", account)
+            userCheck = cursorLG.fetchall()
+
+            if userCheck[0]['password'] == token:
+                cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
+                checkCurrentAdena = cursor.fetchall()
+                setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
+                adeptioToSet = int(count / adeptio_BuyRate)
+                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
+                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                checkBalance = cursorLG.fetchall()
+                setAdeptioFinal = int((int(checkBalance[0]['balance']) - int(adeptioToSet)))
+                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
+                return jsonify(data=success)
+            else:
+                print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
+                return jsonify(data=auth)
+
 
 # http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class sellAdena(Resource):
@@ -90,15 +139,13 @@ class sellAdena(Resource):
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                setAdena = (int(adenaCountStatus[0]['count']) - count)
-                adeptio_balance = int(count / adeptio_rate)
-                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdena, owner_id))
+                setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
+                adeptioTopay = int(count / adeptio_rate)
+                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
-                print(checkBalance[0]['balance'], adeptio_balance)
-                sumFinal = int((int(checkBalance[0]['balance']) + int(adeptio_balance)))
-                print(sumFinal)
-                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, sumFinal))
+                setAdeptioFinal = int((int(checkBalance[0]['balance']) + int(adeptioTopay)))
+                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
                 return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
@@ -140,6 +187,7 @@ api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
 api.add_resource(register, '/register')
 api.add_resource(sellAdena, '/sellAdena')
+api.add_resource(buyAdena, '/buyAdena')
 
 # Serve the high performance http server
 if __name__ == '__main__':
