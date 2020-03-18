@@ -66,7 +66,7 @@ class adenaCount(Resource):
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
         token = int(request.args.get('token'))
-        check = cursor.execute("select online from characters WHERE char_id=%s;", owner_id)
+        check = cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         if check != 0:
             return jsonify(data=loggedin)
         else:
