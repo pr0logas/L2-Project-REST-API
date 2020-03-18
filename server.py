@@ -95,6 +95,7 @@ class sellAdena(Resource):
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdena, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
+                print(checkBalance[0]['balance'], adeptio_balance)
                 sumFinal = (checkBalance[0]['balance'] + adeptio_balance)
                 print(sumFinal)
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, sumFinal))
