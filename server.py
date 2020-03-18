@@ -75,7 +75,7 @@ class buyAdena(Resource):
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s", owner_id)
-        adeptioCountStatus = cursor.fetchall()
+        adeptioCountStatus = cursorLG.fetchall()
 
 
         if onlineStatus[0]['online'] != 0:
