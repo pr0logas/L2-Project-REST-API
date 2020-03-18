@@ -69,7 +69,7 @@ class adenaCount(Resource):
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         status = cursor.fetchall()
 
-        if status != 0:
+        if status[0]['online'] != 0:
             print(status[0]['online'])
             return jsonify(data=loggedin)
         else:
