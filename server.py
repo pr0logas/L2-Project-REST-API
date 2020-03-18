@@ -93,7 +93,7 @@ class buyAdena(Resource):
             if userCheck[0]['password'] == token:
                 cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                 checkCurrentAdena = cursor.fetchall()
-                setAdenaFinal = (int(checkCurrentAdena[0]['balance']) + count)
+                setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
                 adeptioToSet = int(count / adeptio_BuyRate)
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
