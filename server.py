@@ -69,12 +69,12 @@ class sellAdena(Resource):
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
-        adeptio_balance = int(count / adeptio_rate)
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
+
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
@@ -85,12 +85,17 @@ class sellAdena(Resource):
         elif account == '':
             return jsonify(data=auth)
         else:
+            # Start checking user passw
             cursorLG.execute("select password from accounts WHERE login=%s;", account)
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (count, owner_id))
-                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, adeptio_balance))
+                setAdena = (int(adenaCountStatus[0]['count']) - count)
+                adeptio_balance = int(count / adeptio_rate)
+                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdena, owner_id))
+                checkBalance = cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                sumFinal = int(checkBalance[0]['balance'] + adeptio_balance)
+                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, sumFinal))
                 return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
