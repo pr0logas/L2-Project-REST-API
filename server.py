@@ -159,14 +159,15 @@ class sellAdena(Resource):
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
-                adeptioTopay = float(count / adeptio_rate)
-                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
-                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
-                checkBalance = cursorLG.fetchall()
-                setAdeptioFinal = float((int(checkBalance[0]['balance']) + float(adeptioTopay)))
-                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
-                return jsonify(data=success)
+                if count and count.isdigit():
+                    setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
+                    adeptioTopay = float(count / adeptio_rate)
+                    cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
+                    cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                    checkBalance = cursorLG.fetchall()
+                    setAdeptioFinal = float((int(checkBalance[0]['balance']) + float(adeptioTopay)))
+                    cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
+                    return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
                 return jsonify(data=auth)
