@@ -216,7 +216,8 @@ class register(Resource):
 
 class getOnline(Resource):
     def get(self):
-        cursor.execute("select char_name from characters WHERE online=1;")return jsonify(data=cursor.fetchall())
+        cursor.execute("select char_name from characters WHERE online=1;")
+        return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio
 class depositAdeptio(Resource):
