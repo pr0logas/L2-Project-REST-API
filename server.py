@@ -309,6 +309,54 @@ class depositAdeptioApproval(Resource):
             return jsonify(data=auth)
 
 
+# http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
+class withdrawAdeptio(Resource):
+    def get(self):
+        auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        wrongWlt = json.loads('{"ERROR" : "Invalid wallet provided. Please check the wallet addr!"}')
+        notEnoughAdeptio = json.loads('{"ERROR" : "You don\'t have enough Adeptio to withdraw this amount"}')
+        account = str(request.args.get('account'))
+        token = str(request.args.get('token'))
+        wallet = str(request.args.get('wlt'))
+        count = int(request.args.get('count'))
+        checkLenght = print(len(wallet))
+        checkLetterA = print(wallet[0])
+
+        if checkLenght != 35:
+            return jsonify(data=wrongWlt)
+
+        if checkLetterA != 'A':
+            return jsonify(data=wrongWlt)
+
+        cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", account)
+        checkBalance = cursorLG.fetchall()
+
+        if checkBalance[0]['balance'] < int(count):
+            return jsonify(data=notEnoughAdeptio)
+
+        cursorLG.execute("select password from accounts WHERE login=%s;", account)
+        userCheck = cursorLG.fetchall()
+
+        if userCheck[0]['password'] == token:
+            if count and int(count) > 0:
+                host = credentials['rpc']
+                user = credentials['rpcuser']
+                passwd= credentials['rpcpassword']
+                timeout = credentials['rpcclienttimeout']
+                command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' sendtoaddress ' + wallet + ' ' + count
+                result = subprocess.check_output(command,shell=True).strip()
+
+                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                currentAdeptioBalance = cursorLG.fetchall()
+
+                setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) - int(count))
+
+                cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
+                return jsonify(data=result.decode("utf-8"))
+        else:
+            print('Failed Adeptio withdrawal! Actual passw / user sent: ', userCheck[0]['password'], token)
+            return jsonify(data=auth)
+
 # Routes
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getOnline, '/getOnline')
