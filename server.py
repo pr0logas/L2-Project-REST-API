@@ -226,7 +226,7 @@ class depositAdeptio(Resource):
         user = credentials['rpcuser']
         passwd= credentials['rpcpassword']
         timeout = credentials['rpcclienttimeout']
-        command = 'adeptio-cli -rpcconnect=' + host + '-rpcuser=' + user + '-rpcpassword=' + passwd  + '-rpcclienttimeout=' + timeout + 'getnewaddress'
+        command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
         result = subprocess.check_output(command,shell=True).strip()
         print(result)
         cursor.execute("select char_name from characters WHERE online=1;")
