@@ -247,6 +247,7 @@ class depositAdeptioApproval(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful"}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
+        failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
@@ -277,6 +278,8 @@ class depositAdeptioApproval(Resource):
                 if count and count > 0:
                     cursorLG.execute("replace into adeptio_balances (login, balance, lastdepositwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
                     return jsonify(data=success)
+                else:
+                    return jsonify(data=failedCount)
             else:
                 return jsonify(data=failedwlt)
         else:
