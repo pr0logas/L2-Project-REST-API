@@ -320,7 +320,7 @@ class withdrawAdeptio(Resource):
         wallet = str(request.args.get('wlt'))
         count = int(request.args.get('count'))
 
-        if len(wallet) != 35:
+        if len(wallet) != 34:
             return jsonify(data=wrongWlt)
 
         if wallet[0] != 'A':
