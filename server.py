@@ -71,6 +71,7 @@ class buyAdena(Resource):
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
         adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
+        adeptioFail3 = json.loads('{"ERROR" : "At least 1000 Adena required to perform this operation."}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
@@ -84,6 +85,8 @@ class buyAdena(Resource):
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail2)
+        elif int(count) >= 1000:
+            return jsonify(data=adeptioFail3)
         elif int(adeptioCountStatus[0]['balance']) < int((count) / adeptio_BuyRate): # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail)
         elif account == '':
