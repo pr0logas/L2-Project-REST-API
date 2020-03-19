@@ -7,6 +7,7 @@ from gevent.pywsgi import WSGIServer
 from auth import credentials
 from pymysql.cursors import DictCursor
 import hashlib, base64
+import subprocess
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
@@ -215,6 +216,18 @@ class register(Resource):
 
 class getOnline(Resource):
     def get(self):
+        cursor.execute("select char_name from characters WHERE online=1;")return jsonify(data=cursor.fetchall())
+
+# http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio
+class depositAdeptio(Resource):
+    def get(self):
+        host = credentials['rpc']
+        user = credentials['rpcuser']
+        passwd= credentials['rpcpassword']
+        timeout = credentials['rpcclienttimeout']
+        command = 'adeptio-cli -rpcconnect=' + host + '-rpcuser=' + user + '-rpcpassword=' + passwd  + '-rpcclienttimeout=' + timeout + 'getnewaddress'
+        result = subprocess.check_output(command,shell=True).strip()
+        print(result)
         cursor.execute("select char_name from characters WHERE online=1;")
         return jsonify(data=cursor.fetchall())
 
