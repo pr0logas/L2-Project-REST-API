@@ -94,7 +94,7 @@ class buyAdena(Resource):
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail2)
-        elif int(count) >= 1000:
+        elif int(count) < 999:
             return jsonify(data=adeptioFail3)
         elif int(adeptioCountStatus[0]['balance']) < int((count) / adeptio_BuyRate): # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail)
@@ -146,7 +146,7 @@ class sellAdena(Resource):
         elif int(adenaCountStatus[0]['count']) <= 1000: # Check if user have enough adena to sell
             print(1)
             return jsonify(data=adenaFail2)
-        elif int(count) > 999:
+        elif int(count) < 999:
             print(2, int(count))
             return jsonify(data=adenaFail2)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
