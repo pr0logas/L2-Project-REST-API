@@ -263,6 +263,7 @@ class depositAdeptioApproval(Resource):
         req = urllib.request.Request(url, headers=header)
         response = urllib.request.urlopen(req)
         restmp = int(response.read())
+        print(restmp)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
