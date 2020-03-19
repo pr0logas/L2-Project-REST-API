@@ -81,6 +81,8 @@ class buyAdena(Resource):
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
         adeptioCountStatus = cursorLG.fetchall()
 
+        if count.isdigit() ==
+
         try:
             print(adeptioCountStatus[0]['balance'])
         except:
@@ -106,16 +108,17 @@ class buyAdena(Resource):
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
-                checkCurrentAdena = cursor.fetchall()
-                setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
-                adeptioToSet = float(float(count) / float(adeptio_BuyRate))
-                cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
-                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
-                checkBalance = cursorLG.fetchall()
-                setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
-                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
-                return jsonify(data=success)
+                if count and count.isdigit():
+                    cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
+                    checkCurrentAdena = cursor.fetchall()
+                    setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
+                    adeptioToSet = float(float(count) / float(adeptio_BuyRate))
+                    cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
+                    cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                    checkBalance = cursorLG.fetchall()
+                    setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
+                    cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
+                    return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
                 return jsonify(data=auth)
