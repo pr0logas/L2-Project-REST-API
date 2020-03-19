@@ -85,6 +85,7 @@ class buyAdena(Resource):
             print(adeptioCountStatus[0]['balance'])
         except:
             cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, 0))
+            print("WARNING! User balance initiated to - 0 (ADE)")
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
