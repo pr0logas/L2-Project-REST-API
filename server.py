@@ -235,9 +235,10 @@ class depositAdeptio(Resource):
             timeout = credentials['rpcclienttimeout']
             command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
             result = subprocess.check_output(command,shell=True).strip()
-            onlyWlt = result.decode("utf-8")['data']
+            result = result.decode("utf-8")
+            onlyWlt = result['data']
             cursorLG.execute("replace into adeptio_balances values lastdepositwlt=%s WHERE login=%s;", (onlyWlt, account))
-            return jsonify(data=result.decode("utf-8"))
+            return jsonify(data=result)
         else:
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
             return jsonify(data=auth)
