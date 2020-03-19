@@ -222,13 +222,23 @@ class getOnline(Resource):
 # http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio
 class depositAdeptio(Resource):
     def get(self):
-        host = credentials['rpc']
-        user = credentials['rpcuser']
-        passwd= credentials['rpcpassword']
-        timeout = credentials['rpcclienttimeout']
-        command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
-        result = subprocess.check_output(command,shell=True).strip()
-        return jsonify(data=result.decode("utf-8"))
+        auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        cursorLG.execute("select password from accounts WHERE login=%s;", account)
+        userCheck = cursorLG.fetchall()
+
+        if userCheck[0]['password'] == token:
+            host = credentials['rpc']
+            user = credentials['rpcuser']
+            passwd= credentials['rpcpassword']
+            timeout = credentials['rpcclienttimeout']
+            command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
+            result = subprocess.check_output(command,shell=True).strip()
+            onlyWlt = result.decode("utf-8")['data']
+            cursorLG.execute("replace into adeptio_balances (lastdepositwlt) values (%s) ", (onlyWlt))
+            return jsonify(data=result.decode("utf-8"))
+        else:
+            print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
+            return jsonify(data=auth)
 
 
 # Routes
