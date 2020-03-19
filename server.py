@@ -267,8 +267,7 @@ class depositAdeptioApproval(Resource):
             restmp = int(response.read())
             print(int(restmp))
         except:
-            print(restmp)
-            return jsonify(data=restmp)
+            return jsonify(data=response.read())
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
