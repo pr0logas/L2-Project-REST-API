@@ -223,6 +223,8 @@ class getOnline(Resource):
 class depositAdeptio(Resource):
     def get(self):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        account = str(request.args.get('account'))
+        token = str(request.args.get('token'))
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
 
