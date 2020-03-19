@@ -106,7 +106,7 @@ class buyAdena(Resource):
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                if count and count.isdigit():
+                if count and int(count) > 0:
                     cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                     checkCurrentAdena = cursor.fetchall()
                     setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
@@ -159,7 +159,7 @@ class sellAdena(Resource):
             userCheck = cursorLG.fetchall()
 
             if userCheck[0]['password'] == token:
-                if count and count.isdigit():
+                if count and int(count) > 0:
                     setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
                     adeptioTopay = float(count / adeptio_rate)
                     cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
