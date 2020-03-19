@@ -228,8 +228,7 @@ class depositAdeptio(Resource):
         timeout = credentials['rpcclienttimeout']
         command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
         result = subprocess.check_output(command,shell=True).strip()
-        formatOutput = json.loads('{"SUCCESS" : "' + result +"}')
-        return jsonify(data=formatOutput)
+        return jsonify(data=result)
 
 
 # Routes
