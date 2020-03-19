@@ -323,7 +323,7 @@ class withdrawAdeptio(Resource):
         checkLetterA = print(wallet[0])
         print(checkLenght, checkLetterA)
 
-        if checkLenght != 35:
+        if checkLenght != 34:
             return jsonify(data=wrongWlt)
 
         if checkLetterA != 'A':
