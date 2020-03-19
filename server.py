@@ -222,6 +222,7 @@ class getOnline(Resource):
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
+api.add_resource(getOnline, '/getOnline')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getAdeptioUserInfo, '/getAdeptioUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
