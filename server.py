@@ -146,8 +146,7 @@ class sellAdena(Resource):
         elif int(adenaCountStatus[0]['count']) <= 1000: # Check if user have enough adena to sell
             print(1)
             return jsonify(data=adenaFail2)
-        elif int(count) >= 1000:
-
+        elif int(count) > 999:
             print(2, int(count))
             return jsonify(data=adenaFail2)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
