@@ -309,7 +309,7 @@ class depositAdeptioApproval(Resource):
             return jsonify(data=auth)
 
 
-# http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
+# http://127.0.0.1:9005/apiv1/withdrawAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 class withdrawAdeptio(Resource):
     def get(self):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
@@ -321,6 +321,7 @@ class withdrawAdeptio(Resource):
         count = int(request.args.get('count'))
         checkLenght = print(len(wallet))
         checkLetterA = print(wallet[0])
+        print(checkLenght, checkLetterA)
 
         if checkLenght != 35:
             return jsonify(data=wrongWlt)
