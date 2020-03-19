@@ -272,7 +272,7 @@ class depositAdeptioApproval(Resource):
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 currentAdeptioBalance = cursorLG.fetchall()
 
-                setNewAdeptioBalance = int(int(currentAdeptioBalance) + int(count))
+                setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) + int(count))
 
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setNewAdeptioBalance))
                 return jsonify(data=success)
