@@ -87,6 +87,9 @@ class buyAdena(Resource):
             cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, 0))
             print("WARNING! User balance initiated to - 0 (ADE)")
 
+        cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+        adeptioCountStatus = cursorLG.fetchall()
+
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
