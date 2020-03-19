@@ -8,6 +8,7 @@ from auth import credentials
 from pymysql.cursors import DictCursor
 import hashlib, base64
 import subprocess
+import urllib.request
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
@@ -248,11 +249,21 @@ class depositAdeptioApproval(Resource):
         success = json.loads('{"SUCCESS" : "Operation was successful"}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
+        failedAmount = json.loads('{"ERROR" : "Amount not match?"}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
+        provider = 'https://explorer.adeptio.cc/ext/getbalance/'
+        wallet = str(request.args.get('wlt'))
+        url = (provider + wallet)
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
-        wallet = str(request.args.get('wlt'))
         count = int(request.args.get('count'))
+
+        # Read count from explorer
+        req = urllib.request.Request(url, headers=header)
+        response = urllib.request.urlopen(req)
+        restmp = int(response.read())
+
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
 
@@ -261,25 +272,30 @@ class depositAdeptioApproval(Resource):
             walletCheck = cursorLG.fetchall()
 
             if walletCheck[0]['lastdepositwlt'] == wallet:
-                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
-                currentAdeptioBalance = cursorLG.fetchall()
 
-                try:
-                    print(currentAdeptioBalance[0]['balance'])
-                except:
-                    cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, 0))
-                    print("WARNING! User balance initiated to - 0 (ADE)")
+                if int(restmp) == int(count):
+                    cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                    currentAdeptioBalance = cursorLG.fetchall()
 
-                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
-                currentAdeptioBalance = cursorLG.fetchall()
+                    try:
+                        print(currentAdeptioBalance[0]['balance'])
+                    except:
+                        cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, 0))
+                        print("WARNING! User balance initiated to - 0 (ADE)")
 
-                setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) + int(count))
+                    cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                    currentAdeptioBalance = cursorLG.fetchall()
 
-                if count and count > 0:
-                    cursorLG.execute("replace into adeptio_balances (login, balance, lastdepositwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
-                    return jsonify(data=success)
-                else:
-                    return jsonify(data=failedCount)
+                    setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) + int(count))
+
+                    if count and count > 0:
+                        cursorLG.execute("replace into adeptio_balances (login, balance, lastdepositwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
+                        return jsonify(data=success)
+                    else:
+                        return jsonify(data=failedCount)
+
+                return jsonify(data=failedAmount)
+
             else:
                 return jsonify(data=failedwlt)
         else:
