@@ -81,6 +81,8 @@ class buyAdena(Resource):
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
         adeptioCountStatus = cursorLG.fetchall()
 
+        print(adeptioCountStatus)
+
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
@@ -104,13 +106,7 @@ class buyAdena(Resource):
                 cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                 checkBalance = cursorLG.fetchall()
-                try:
-                    setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
-                    print(setAdeptioFinal)
-                except:
-                    setAdeptioFinal = float(adeptioToSet)
-                    print(setAdeptioFinal)
-
+                setAdeptioFinal = float((float(checkBalance[0]['balance']) - float(adeptioToSet)))
                 cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
                 return jsonify(data=success)
             else:
