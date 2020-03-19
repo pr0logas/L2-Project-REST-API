@@ -212,6 +212,14 @@ class register(Resource):
             print('user/passw: ', user, passw)
             return jsonify(data=fail)
 
+
+class getOnline(Resource):
+    def get(self):
+        cursor.execute("select charId,online from characters WHERE online=1;")
+        cursor.fetchall()
+        return jsonify(data=cursor.fetchall())
+
+
 # Routes
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getUserInfo, '/getUserInfo')
