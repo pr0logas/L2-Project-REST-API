@@ -262,8 +262,13 @@ class depositAdeptioApproval(Resource):
         # Read count from explorer
         req = urllib.request.Request(url, headers=header)
         response = urllib.request.urlopen(req)
-        restmp = int(response.read())
-        print(int(restmp))
+
+        try:
+            restmp = int(response.read())
+            print(int(restmp))
+        except:
+            print(restmp)
+            return jsonify(data=restmp)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
