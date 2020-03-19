@@ -236,7 +236,7 @@ class depositAdeptio(Resource):
             command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' getnewaddress'
             result = subprocess.check_output(command,shell=True).strip()
             result = result.decode("utf-8")
-            onlyWlt = result['data']
+            onlyWlt = result[0]['data']
             cursorLG.execute("replace into adeptio_balances values lastdepositwlt=%s WHERE login=%s;", (onlyWlt, account))
             return jsonify(data=result)
         else:
