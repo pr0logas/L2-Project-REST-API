@@ -293,6 +293,7 @@ api.add_resource(register, '/register')
 api.add_resource(sellAdena, '/sellAdena')
 api.add_resource(buyAdena, '/buyAdena')
 api.add_resource(depositAdeptio, '/depositAdeptio')
+api.add_resource(depositAdeptioApproval, '/depositAdeptioApproval')
 
 # Serve the high performance http server
 if __name__ == '__main__':
