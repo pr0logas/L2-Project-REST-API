@@ -319,14 +319,11 @@ class withdrawAdeptio(Resource):
         token = str(request.args.get('token'))
         wallet = str(request.args.get('wlt'))
         count = int(request.args.get('count'))
-        checkLenght = print(len(wallet))
-        checkLetterA = print(wallet[0])
-        print(checkLenght, checkLetterA)
 
-        if int(checkLenght) != 34:
+        if len(wallet) != 35:
             return jsonify(data=wrongWlt)
 
-        if checkLetterA != 'A':
+        if wallet[0] != 'A':
             return jsonify(data=wrongWlt)
 
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", account)
