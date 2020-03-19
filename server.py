@@ -215,7 +215,7 @@ class register(Resource):
 
 class getOnline(Resource):
     def get(self):
-        cursor.execute("select char_name,online from characters WHERE online=1;")
+        cursor.execute("select char_name from characters WHERE online=1;")
         return jsonify(data=cursor.fetchall())
 
 
