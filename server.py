@@ -249,6 +249,7 @@ class depositAdeptioApproval(Resource):
         success = json.loads('{"SUCCESS" : "Operation was successful"}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
+        failedExplorer = json.loads('{"ERROR" : "Unknown amount from explorer?"}')
         failedAmount = json.loads('{"ERROR" : "Amount not match?"}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
@@ -267,7 +268,7 @@ class depositAdeptioApproval(Resource):
             restmp = int(response.read())
             print(int(restmp))
         except:
-            return jsonify(data=failedCount)
+            return jsonify(data=failedExplorer)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
         userCheck = cursorLG.fetchall()
