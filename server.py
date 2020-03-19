@@ -81,8 +81,6 @@ class buyAdena(Resource):
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
         adeptioCountStatus = cursorLG.fetchall()
 
-        if count.isdigit() ==
-
         try:
             print(adeptioCountStatus[0]['balance'])
         except:
