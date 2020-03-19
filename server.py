@@ -313,6 +313,7 @@ class depositAdeptioApproval(Resource):
 class withdrawAdeptio(Resource):
     def get(self):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        wrongAmount = json.loads('{"ERROR" : "Wrong amount"}')
         wrongWlt = json.loads('{"ERROR" : "Invalid wallet provided. Please check the wallet addr!"}')
         notEnoughAdeptio = json.loads('{"ERROR" : "You don\'t have enough Adeptio to withdraw this amount"}')
         account = str(request.args.get('account'))
@@ -351,6 +352,8 @@ class withdrawAdeptio(Resource):
 
                 cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
                 return jsonify(data=result.decode("utf-8"))
+            else:
+                return jsonify(data=wrongAmount)
         else:
             print('Failed Adeptio withdrawal! Actual passw / user sent: ', userCheck[0]['password'], token)
             return jsonify(data=auth)
