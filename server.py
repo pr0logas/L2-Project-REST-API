@@ -242,6 +242,46 @@ class depositAdeptio(Resource):
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
             return jsonify(data=auth)
 
+# http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
+class depositAdeptioApproval(Resource):
+    def get(self):
+        success = json.loads('{"SUCCESS" : "Operation was successful"}')
+        failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
+        auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        account = str(request.args.get('account'))
+        token = str(request.args.get('token'))
+        wallet = str(request.args.get('wlt'))
+        count = int(request.args.get('count'))
+        cursorLG.execute("select password from accounts WHERE login=%s;", account)
+        userCheck = cursorLG.fetchall()
+
+        if userCheck[0]['password'] == token:
+            cursorLG.execute("select lastdepositwlt from adeptio_balances WHERE login=%s;", account)
+            walletCheck = cursorLG.fetchall()
+
+            if walletCheck[0]['lastdepositwlt'] == wallet:
+                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                currentAdeptioBalance = cursorLG.fetchall()
+
+                try:
+                    print(currentAdeptioBalance[0]['balance'])
+                except:
+                    cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, 0))
+                    print("WARNING! User balance initiated to - 0 (ADE)")
+
+                cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
+                currentAdeptioBalance = cursorLG.fetchall()
+
+                setNewAdeptioBalance = int(int(currentAdeptioBalance) + int(count))
+
+                cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setNewAdeptioBalance))
+                return jsonify(data=success)
+            else:
+                return jsonify(data=failedwlt)
+        else:
+            print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
+            return jsonify(data=auth)
+
 
 # Routes
 api.add_resource(getInfo, '/getInfo')
