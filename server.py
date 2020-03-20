@@ -9,6 +9,7 @@ from pymysql.cursors import DictCursor
 import hashlib, base64
 import subprocess
 import urllib.request
+from flask_cors import CORS
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
@@ -25,6 +26,7 @@ def get_real_ip():
 
 # Flask rules
 app = Flask(__name__)
+CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 limiter = Limiter(app, key_func=get_real_ip, default_limits=["20/minute"])
 app.url_map.strict_slashes = False
