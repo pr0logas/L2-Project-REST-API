@@ -295,7 +295,7 @@ class depositAdeptioApproval(Resource):
                     setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) + int(count))
 
                     if count and count > 0:
-                        cursorLG.execute("replace into adeptio_balances (login, balance, lastdepositwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, None))
+                        cursorLG.execute("replace into adeptio_balances set login=%s, balance=%s, lastdepositwlt=%s;", (account, setNewAdeptioBalance, None))
                         return jsonify(data=success)
                     else:
                         return jsonify(data=failedCount)
