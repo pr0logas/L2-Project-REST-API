@@ -243,7 +243,7 @@ class depositAdeptio(Resource):
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
             return jsonify(data=auth)
 
-# http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
+# http://127.0.0.1:9005/apiv1/depositAdeptioApproval?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 class depositAdeptioApproval(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful"}')
@@ -278,6 +278,7 @@ class depositAdeptioApproval(Resource):
             walletCheck = cursorLG.fetchall()
 
             if walletCheck[0]['lastdepositwlt'] == wallet and walletCheck[0]['lastdepositwlt'] != None:
+                restmp = response.read()
 
                 if int(restmp) == int(count):
                     cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
@@ -299,9 +300,8 @@ class depositAdeptioApproval(Resource):
                         return jsonify(data=success)
                     else:
                         return jsonify(data=failedCount)
-
-                return jsonify(data=failedAmount)
-
+                else:
+                    return jsonify(data=failedAmount)
             else:
                 return jsonify(data=failedwlt)
         else:
