@@ -278,9 +278,8 @@ class depositAdeptioApproval(Resource):
             walletCheck = cursorLG.fetchall()
 
             if walletCheck[0]['lastdepositwlt'] == wallet and walletCheck[0]['lastdepositwlt'] != None:
-                restmp = response.read()
 
-                if int(restmp) == int(count):
+                if (restmp == int(count)):
                     cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                     currentAdeptioBalance = cursorLG.fetchall()
 
