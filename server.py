@@ -69,7 +69,7 @@ class getMoneyCount(Resource):
 # http://127.0.0.1:9005/apiv1/getMoneyCount?account=adeptio
 class getUserMoneyCount(Resource):
     def get(self):
-        account = int(request.args.get('account'))
+        account = str(request.args.get('account'))
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
         return jsonify(data=cursor.fetchall())
         #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
