@@ -88,7 +88,7 @@ class getUserMoneyCount(Resource):
 # http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class buyAdena(Resource):
     def get(self):
-        success = json.loads('{"SUCCESS" : "Operation was successful"}')
+        success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
@@ -149,7 +149,7 @@ class buyAdena(Resource):
 # http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class sellAdena(Resource):
     def get(self):
-        success = json.loads('{"SUCCESS" : "Operation was successful"}')
+        success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
@@ -266,11 +266,11 @@ class depositAdeptio(Resource):
 # http://127.0.0.1:9005/apiv1/depositAdeptioApproval?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 class depositAdeptioApproval(Resource):
     def get(self):
-        success = json.loads('{"SUCCESS" : "Operation was successful"}')
+        success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
-        failedExplorer = json.loads('{"ERROR" : "Unknown amount from explorer. Do you really sent the coins?"}')
-        failedAmount = json.loads('{"ERROR" : "Amount not match?"}')
+        failedExplorer = json.loads('{"ERROR" : "Unknown amount from explorer. Do you really sent the coins? If yes, please wait at least up-to 15 minutes"}')
+        failedAmount = json.loads('{"ERROR" : "Amount not match? Looks like you sent the coins but amount you provided don\'t match with actually sent coins"}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
         provider = 'https://explorer.adeptio.cc/ext/getbalance/'
