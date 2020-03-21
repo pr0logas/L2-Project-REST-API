@@ -73,7 +73,7 @@ class getUserMoneyCount(Resource):
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
         allchars = cursor.fetchall()
 
-        print(allchars[0]['data'])
+        print(allchars[0])
         #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
 
 
