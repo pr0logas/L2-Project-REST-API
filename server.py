@@ -66,6 +66,14 @@ class getMoneyCount(Resource):
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/getMoneyCount?account=adeptio
+class getUserMoneyCount(Resource):
+    def get(self):
+        account = int(request.args.get('account'))
+        cursor.execute("select charId from characters WHERE account_name=%s;", account)
+        return jsonify(data=cursor.fetchall())
+        #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
+
 
 # http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class buyAdena(Resource):
@@ -365,6 +373,7 @@ api.add_resource(getOnline, '/getOnline')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getAdeptioUserInfo, '/getAdeptioUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
+api.add_resource(getUserMoneyCount, '/getUserMoneyCount')
 api.add_resource(register, '/register')
 api.add_resource(sellAdena, '/sellAdena')
 api.add_resource(buyAdena, '/buyAdena')
