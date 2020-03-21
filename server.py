@@ -33,7 +33,7 @@ def get_real_ip():
 app = Flask(__name__)
 CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
-limiter = Limiter(app, key_func=get_real_ip, default_limits=["30/minute"])
+limiter = Limiter(app, key_func=get_real_ip, default_limits=["20/minute"])
 app.url_map.strict_slashes = False
 api = Api(app, prefix="/apiv1")
 
