@@ -1,3 +1,8 @@
+##:: Author: Tomas Andriekus
+##:: 2020-03-16 - 2020-03-22
+##:: Description: This is a REST API prototype for Adeptio cryptocurrency & L2J Server Adena exchange.
+##:: All work is done in a sprint mode without any good practices.
+
 import pymysql, re
 from flask import Flask, request, jsonify, json
 from flask_limiter import Limiter
@@ -79,7 +84,6 @@ class getUserMoneyCount(Resource):
             theSum += int(count[0]['count'])
 
         return jsonify(data=theSum)
-
 
 # http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class buyAdena(Resource):
