@@ -78,7 +78,7 @@ class getUserMoneyCount(Resource):
             print(value['charId'])
             cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", value['charId'])
             count = cursor.fetchall()
-            theSum =+ count['count']
+            theSum =+ count[0]['count']
             print(count)
             print(theSum)
         #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
