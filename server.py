@@ -74,13 +74,10 @@ class getUserMoneyCount(Resource):
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
         allCharsIds = cursor.fetchall()
         for value in allCharsIds:
-            theSum = ''
-            print(value['charId'])
             cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", value['charId'])
             count = cursor.fetchall()
             theSum =+ count[0]['count']
-            print(count)
-            print(theSum)
+            print("suma", theSum)
         #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
 
 
