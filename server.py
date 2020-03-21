@@ -71,9 +71,9 @@ class getUserMoneyCount(Resource):
     def get(self):
         account = str(request.args.get('account'))
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
-        allchars = cursor.fetchall()
+        allchars = jsonify(data=cursor.fetchall())
 
-        print(allchars[0])
+        print(allchars['data'])
         #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
 
 
