@@ -269,7 +269,7 @@ class depositAdeptioApproval(Resource):
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
-        failedExplorer = json.loads('{"ERROR" : "Unknown amount from explorer. Do you really sent the coins? If yes, please wait at least up-to 15 minutes"}')
+        failedExplorer = json.loads('{"ERROR" : "Unknown amount from explorer. Do you really sent the coins to deposit address? If yes, please wait at least up-to 15 minutes."}')
         failedAmount = json.loads('{"ERROR" : "Amount not match? Looks like you sent the coins but amount you provided don\'t match with actually sent coins"}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
