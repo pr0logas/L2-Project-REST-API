@@ -70,17 +70,15 @@ class getMoneyCount(Resource):
 class getUserMoneyCount(Resource):
     def get(self):
         theSum = 0
-        success = json.loads('{"SUCCESS" : "Operation was successful"}')
         account = str(request.args.get('account'))
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
         allCharsIds = cursor.fetchall()
         for value in allCharsIds:
             cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", value['charId'])
             count = cursor.fetchall()
-            print(int(count[0]['count']))
-            theSum =+ int(count[0]['count'])
-            print("suma", theSum)
-        #cursor.execute("select count from items WHERE item_id=57 and login=%s;", account)
+            theSum += int(count[0]['count'])
+
+        return jsonify(data=theSum)
 
 
 # http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
