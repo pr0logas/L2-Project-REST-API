@@ -391,20 +391,6 @@ api.add_resource(depositAdeptio, '/depositAdeptio')
 api.add_resource(withdrawAdeptio, '/withdrawAdeptio')
 api.add_resource(depositAdeptioApproval, '/depositAdeptioApproval')
 
-teti = '123456'
-
-print(teti+' encode utf8: ')
-print(teti.encode('utf8'))
-
-print(teti+' sha1: ')
-print(hashlib.sha1(teti.encode('utf8')))
-
-print(teti+' sha1 b64encode: ')
-print(base64.b64encode(hashlib.sha1(teti.encode('utf8')).digest()))
-
-print(teti+' b64encode: ')
-print(base64.b64encode(teti))
-
 # Serve the high performance http server
 if __name__ == '__main__':
     http_server = WSGIServer(('', 9005), app)
