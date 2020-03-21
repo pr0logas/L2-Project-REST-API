@@ -210,7 +210,7 @@ class register(Resource):
     def get(self):
         already = json.loads('{"ERROR" : "User already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
-        success = json.loads('{"SUCCESS" : "Registration successful"}')
+        success = json.loads('{"SUCCESS" : "Registration successful. Please take a note that you have to create at least 1 character in order to login to your control panel."}')
         user = str(request.args.get('user'))
         passw = str(request.args.get('passw'))
         mail = str(request.args.get('email'))
