@@ -341,7 +341,7 @@ class getCryptoPrices(Resource):
         response = urllib.request.urlopen(req)
 
         try:
-            restmp = response.read().decode('utf-8')
+            restmp = response.read().decode('utf-8').replace('\n', ''))
             print(restmp)
             aa = json.dumps(restmp)
             print(aa)
