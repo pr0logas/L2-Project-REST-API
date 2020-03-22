@@ -342,7 +342,7 @@ class getCryptoPrices(Resource):
 
         try:
             restmp = response.read().decode('utf-8')
-            print(restmp)
+            print(restmp[0]['last'])
             aa = json.dumps(restmp)
             print(aa)
             return jsonify(data=(restmp))
