@@ -340,7 +340,7 @@ class getCryptoPrices(Resource):
         response = urllib.request.urlopen(req)
 
         try:
-            restmp = int(response.read())
+            restmp = response.read()
             print(restmp)
         except:
             print('nothing')
