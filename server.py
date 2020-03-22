@@ -82,8 +82,10 @@ class getUserMoneyCount(Resource):
             print(value['charId'])
             cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", value['charId'])
             count = cursor.fetchall()
-            print(count)
-            theSum += int(count[0]['count'])
+            try:
+                theSum += int(count[0]['count'])
+            except:
+                theSum += 0
 
         return jsonify(data=theSum)
 
