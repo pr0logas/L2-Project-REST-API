@@ -343,10 +343,10 @@ class getCryptoPrices(Resource):
         try:
             restmp = response.read()
             cont = json.loads(restmp.decode('utf-8'))
-            adePrice = (cont[0]['last'])
-            btcPrice = (cont [1] ['last'])
-            print(adePrice,btcPrice)
-            return jsonify(data=(cont))
+            adePrice = int(cont[0]['last'])
+            btcPrice = int(cont [1] ['last'])
+            print((adePrice),(btcPrice))
+            return jsonify(data=(adePrice,btcPrice))
         except:
             return jsonify(data=fail)
 
