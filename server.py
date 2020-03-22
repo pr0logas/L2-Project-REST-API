@@ -344,6 +344,9 @@ class getCryptoPrices(Resource):
         print(response)
         try:
             restmp = response.read()
+            print(restmp)
+            print(restmp[0])
+            print(json.loads(restmp [0])
             return jsonify(data=restmp[0])
         except:
             return jsonify(data=fail)
