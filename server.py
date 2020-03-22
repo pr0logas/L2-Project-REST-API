@@ -341,13 +341,11 @@ class getCryptoPrices(Resource):
         response = urllib.request.urlopen(req)
 
 
-        print(response)
         try:
-            restmp = response.read()
-            print(str(restmp))
-            print(restmp[0])
-            print(json.loads(str(restmp[0])))
-            return jsonify(data=restmp[0])
+            restmp = response.read().decode('utf-8')
+            print(restmp)
+            print(json.loads(str(restmp)))
+            return jsonify(data=restmp)
         except:
             return jsonify(data=fail)
 
