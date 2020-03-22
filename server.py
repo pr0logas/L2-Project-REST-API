@@ -334,6 +334,7 @@ class depositAdeptioApproval(Resource):
 # http://127.0.0.1:9005/apiv1/getCryptoPrices?
 class getCryptoPrices(Resource):
     def get(self):
+        fail = json.loads('{"ERROR" : "Failed to find crypto prices"}')
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
         provider = 'https://api.crex24.com/v2/public/tickers?instrument=ADE-BTC,BTC-USD'
         req = urllib.request.Request(provider, headers=header)
@@ -341,9 +342,9 @@ class getCryptoPrices(Resource):
 
         try:
             restmp = response.read()
-            print(restmp)
+            return jsonify(data=restmp)
         except:
-            print('nothing')
+            return jsonify(data=fail)
 
 
 # http://127.0.0.1:9005/apiv1/withdrawAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
