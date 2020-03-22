@@ -342,6 +342,8 @@ class getCryptoPrices(Resource):
         try:
             restmp = int(response.read())
             print(restmp)
+        except:
+            print('nothing')
 
 
 # http://127.0.0.1:9005/apiv1/withdrawAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
