@@ -338,12 +338,12 @@ class getCryptoPrices(Resource):
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) l2corona.adeptio.cc'}
         provider = 'https://api.crex24.com/v2/public/tickers?instrument=ADE-BTC,BTC-USD'
         req = urllib.request.Request(provider, headers=header)
-        response = urllib.request.urlopen(req)
+        response = urllib.request.urlopen(req).json()
 
         try:
             restmp = response.read().decode('utf-8')
             print(restmp)
-            return jsonify(data=str(restmp))
+            return jsonify(data=(restmp))
         except:
             return jsonify(data=fail)
 
