@@ -17,8 +17,8 @@ import urllib.request
 from flask_cors import CORS
 
 notFound = json.loads('{"ERROR" : "No data found"}')
-adeptio_rate = 1000 # Set 1000 Adena = 1 ADE
-adeptio_BuyRate = 600 # Set 1 Adeptio(ADE) = 600 ADE
+adeptio_rate = 10000 # Set 10000 Adena = 1 ADE
+adeptio_BuyRate = 6000 # Set 1 Adeptio(ADE) = 6000 ADE
 
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
 con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
@@ -96,7 +96,7 @@ class buyAdena(Resource):
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
         adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
-        adeptioFail3 = json.loads('{"ERROR" : "At least 1000 Adena required to perform this operation."}')
+        adeptioFail3 = json.loads('{"ERROR" : "At least 6000 Adena required to perform this operation."}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
@@ -119,7 +119,7 @@ class buyAdena(Resource):
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail2)
-        elif int(count) < 1000:
+        elif int(count) < 6000:
             return jsonify(data=adeptioFail3)
         elif int(adeptioCountStatus[0]['balance']) < int((count) / adeptio_BuyRate): # Check if user have enough Adeptio(ADE) to sell
             return jsonify(data=adeptioFail)
@@ -156,7 +156,7 @@ class sellAdena(Resource):
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
-        adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At least 1000 required"}')
+        adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At least 10 000 required"}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
@@ -168,10 +168,10 @@ class sellAdena(Resource):
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
-        elif int(adenaCountStatus[0]['count']) <= 1000: # Check if user have enough adena to sell
+        elif int(adenaCountStatus[0]['count']) <= 10000: # Check if user have enough adena to sell
             print(1)
             return jsonify(data=adenaFail2)
-        elif int(count) < 1000:
+        elif int(count) < 10000:
             print(2, int(count))
             return jsonify(data=adenaFail2)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
