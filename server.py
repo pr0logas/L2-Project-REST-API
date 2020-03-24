@@ -134,6 +134,7 @@ class buyAdena(Resource):
                 if count and int(count) > 0:
                     cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                     checkCurrentAdena = cursor.fetchall()
+                    print(int(checkCurrentAdena[0]['count']))
                     setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
                     adeptioToSet = int(int(count) / int(adeptio_BuyRate))
                     cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
