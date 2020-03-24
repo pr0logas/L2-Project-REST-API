@@ -1,0 +1,15 @@
+[Unit]
+Description=L2 api & service
+After=network.target
+
+[Service]
+User=root
+Type=simple
+WorkingDirectory=/opt/adeptio-l2-restapi/
+ExecStart=/usr/local/bin/gunicorn --workers 20 --timeout 120 --bind 0.0.0.0:9005 wsgi:app
+Restart=always
+RestartSec=30
+TimeoutSec=60
+
+[Install]
+WantedBy=default.target
