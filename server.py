@@ -93,6 +93,7 @@ class buyAdena(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        charAdena = json.loads('{"ERROR" : "User has to have at least 1 Adena in character items!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
         adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
@@ -134,7 +135,12 @@ class buyAdena(Resource):
                 if count and int(count) > 0:
                     cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
                     checkCurrentAdena = cursor.fetchall()
-                    print(int(checkCurrentAdena[0]['count']))
+
+                    try:
+                        print(int(checkCurrentAdena[0]['count']))
+                    except:
+                        return jsonify(data=charAdena)
+
                     setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
                     adeptioToSet = int(int(count) / int(adeptio_BuyRate))
                     cursor.execute("update items set count=%s WHERE item_id=57 and owner_id=%s;", (setAdenaFinal, owner_id))
