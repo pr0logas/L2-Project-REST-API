@@ -1,1 +1,1 @@
-pymysql flask flask_limiter pip3 install Werkzeug==0.16.0 flask_restful flask-cors gunicorn
+pymysql flask flask_limiter Werkzeug==0.16.0 flask_restful flask-cors gunicorn gevent
