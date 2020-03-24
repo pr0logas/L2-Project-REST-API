@@ -68,7 +68,7 @@ class getAdeptioUserInfo(Resource):
 class getMoneyCount(Resource):
     def get(self):
         userCharId = int(request.args.get('charId'))
-        cursor.execute("select count from items WHERE item_id=57 and loc='INVENTORY' and owner_id=%s;", userCharId)
+        cursor.execute("select count from items WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", userCharId)
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?account=adeptio
@@ -79,7 +79,7 @@ class getUserMoneyCount(Resource):
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
         allCharsIds = cursor.fetchall()
         for value in allCharsIds:
-            cursor.execute("select count from items WHERE item_id=57 and loc=INVENTORY and owner_id=%s;", value['charId'])
+            cursor.execute("select count from items WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", value['charId'])
             count = cursor.fetchall()
             try:
                 theSum += int(count[0]['count'])
@@ -133,7 +133,7 @@ class buyAdena(Resource):
 
             if userCheck[0]['password'] == token:
                 if count and int(count) > 0:
-                    cursor.execute("select count from items WHERE item_id=57 and loc=INVENTORY and owner_id=%s;", owner_id)
+                    cursor.execute("select count from items WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", owner_id)
                     checkCurrentAdena = cursor.fetchall()
 
                     try:
@@ -143,7 +143,7 @@ class buyAdena(Resource):
 
                     setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
                     adeptioToSet = int(int(count) / int(adeptio_BuyRate))
-                    cursor.execute("update items set count=%s WHERE item_id=57 and loc=INVENTORY and owner_id=%s;", (setAdenaFinal, owner_id))
+                    cursor.execute("update items set count=%s WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", (setAdenaFinal, owner_id))
                     cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                     checkBalance = cursorLG.fetchall()
                     setAdeptioFinal = int((float(checkBalance[0]['balance']) - int(adeptioToSet)))
@@ -171,7 +171,7 @@ class sellAdena(Resource):
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
-        cursor.execute("select count from items WHERE item_id=57 and loc=INVENTORY and owner_id=%s;", owner_id)
+        cursor.execute("select count from items WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
 
         try:
@@ -200,7 +200,7 @@ class sellAdena(Resource):
                 if count and int(count) > 0:
                     setAdenaFinal = (int(adenaCountStatus[0]['count']) - count)
                     adeptioTopay = int(count / adeptio_rate)
-                    cursor.execute("update items set count=%s WHERE item_id=57 and loc=INVENTORY and owner_id=%s;", (setAdenaFinal, owner_id))
+                    cursor.execute("update items set count=%s WHERE item_id=57 and Loc=INVENTORY and owner_id=%s;", (setAdenaFinal, owner_id))
                     cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
                     checkBalance = cursorLG.fetchall()
 
