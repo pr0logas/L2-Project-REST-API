@@ -93,7 +93,7 @@ class buyAdena(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
-        charAdena = json.loads('{"ERROR" : "Provided character has to have at least 1 Adena in game items list!"}')
+        charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
         adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
@@ -161,7 +161,7 @@ class sellAdena(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
-        charAdena = json.loads('{"ERROR" : "Provided character has to have at least 1 Adena in game items list!"}')
+        charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
         adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At least 10 000 required"}')
