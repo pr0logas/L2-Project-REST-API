@@ -161,6 +161,7 @@ class sellAdena(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
+        charAdena = json.loads('{"ERROR" : "Provided character has to have at least 1 Adena in game items list!"}')
         loggedin = json.loads('{"ERROR" : "User logged in game. Please logout from L2-Corona server first"}')
         adenaFail = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation"}')
         adenaFail2 = json.loads('{"ERROR" : "User don\'t have enough adena to perform this operation. At least 10 000 required"}')
@@ -172,6 +173,11 @@ class sellAdena(Resource):
         onlineStatus = cursor.fetchall()
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
+
+        try:
+            print(int(adenaCountStatus[0]['count']))
+        except:
+            return jsonify(data=charAdena)
 
         if onlineStatus[0]['online'] != 0:
             return jsonify(data=loggedin)
