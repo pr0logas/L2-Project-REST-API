@@ -383,7 +383,7 @@ class withdrawAdeptio(Resource):
                 user = credentials['rpcuser']
                 passwd= credentials['rpcpassword']
                 timeout = credentials['rpcclienttimeout']
-                command = 'adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' sendtoaddress ' + wallet + ' ' + str(count)
+                command = '/usr/bin/adeptio-cli -rpcconnect=' + host + ' -rpcuser=' + user + ' -rpcpassword=' + passwd  + ' -rpcclienttimeout=' + timeout + ' sendtoaddress ' + wallet + ' ' + str(count)
                 result = subprocess.check_output(command,shell=False).strip()
 
                 cursorLG.execute("select balance from adeptio_balances WHERE login=%s", account)
