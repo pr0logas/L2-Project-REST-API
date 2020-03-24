@@ -1,7 +1,4 @@
-from server import app
-from flask_cors import CORS
-
-app = CORS(app)
+from server import corsApp
 
 if __name__ == "__main__":
-    app.run()
+    corsApp.run()
