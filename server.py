@@ -29,6 +29,10 @@ def get_real_ip():
     print (str(request.remote_addr) + ' Client initiated request ->')
     return (request.remote_addr)
 
+def createCursor():
+    cursor = con.cursor(DictCursor)
+    return cursor
+
 # Flask rules
 app = Flask(__name__)
 CORS(app)
@@ -47,7 +51,9 @@ def checkInvalidChars(value):
 # http://127.0.0.1:9005/apiv1/getInfo
 class getInfo(Resource):
     def get(self):
+        cursor = createCursor()
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters")
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
