@@ -29,7 +29,11 @@ def get_real_ip():
     print (str(request.remote_addr) + ' Client initiated request ->')
     return (request.remote_addr)
 
-def createCursor():
+def createCursor(): # Game db
+    cursor = con.cursor(DictCursor)
+    return cursor
+
+def createCursorLG(): # Login db
     cursor = con.cursor(DictCursor)
     return cursor
 
@@ -59,27 +63,34 @@ class getInfo(Resource):
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
 class getUserInfo(Resource):
     def get(self):
+        cursor = createCursor()
         userAcc = request.args.get('account')
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
 class getAdeptioUserInfo(Resource):
     def get(self):
+        cursor = createCursor()
         userAcc = request.args.get('account')
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", userAcc)
+        cursor.close()
         return jsonify(data=cursorLG.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
 class getMoneyCount(Resource):
     def get(self):
+        cursor = createCursor()
         userCharId = int(request.args.get('charId'))
         cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?account=adeptio
 class getUserMoneyCount(Resource):
     def get(self):
+        cursor = createCursor()
         theSum = 0
         account = str(request.args.get('account'))
         cursor.execute("select charId from characters WHERE account_name=%s;", account)
@@ -92,11 +103,13 @@ class getUserMoneyCount(Resource):
             except:
                 theSum += 0
 
+        cursor.close()
         return jsonify(data=theSum)
 
 # http://127.0.0.1:9005/apiv1/buyAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class buyAdena(Resource):
     def get(self):
+        cursor = createCursor()
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
@@ -123,14 +136,19 @@ class buyAdena(Resource):
         adeptioCountStatus = cursorLG.fetchall()
 
         if onlineStatus[0]['online'] != 0:
+            cursor.close()
             return jsonify(data=loggedin)
         elif int(adeptioCountStatus[0]['balance']) <= 0: # Check if user have enough Adeptio(ADE) to sell
+            cursor.close()
             return jsonify(data=adeptioFail2)
         elif int(count) < 6000:
+            cursor.close()
             return jsonify(data=adeptioFail3)
         elif int(adeptioCountStatus[0]['balance']) < int((count) / adeptio_BuyRate): # Check if user have enough Adeptio(ADE) to sell
+            cursor.close()
             return jsonify(data=adeptioFail)
         elif account == '':
+            cursor.close()
             return jsonify(data=auth)
         else:
             # Start checking user passw
@@ -145,6 +163,7 @@ class buyAdena(Resource):
                     try:
                         print(int(checkCurrentAdena[0]['count']))
                     except:
+                        cursor.close()
                         return jsonify(data=charAdena)
 
                     setAdenaFinal = (int(checkCurrentAdena[0]['count']) + count)
@@ -154,9 +173,11 @@ class buyAdena(Resource):
                     checkBalance = cursorLG.fetchall()
                     setAdeptioFinal = int((float(checkBalance[0]['balance']) - int(adeptioToSet)))
                     cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
+                    cursor.close()
                     return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
+                cursor.close()
                 return jsonify(data=auth)
 
 
