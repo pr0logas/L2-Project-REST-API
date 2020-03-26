@@ -316,11 +316,11 @@ class depositAdeptio(Resource):
             result = subprocess.check_output(command,shell=True).strip()
             onlyWlt = result.decode("utf-8")
             cursorLG.execute("update adeptio_balances set lastdepositwlt=%s WHERE login=%s;", (onlyWlt, account))
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=result.decode("utf-8"))
         else:
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=auth)
 
 # http://127.0.0.1:9005/apiv1/depositAdeptioApproval?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
@@ -349,7 +349,7 @@ class depositAdeptioApproval(Resource):
             restmp = int(response.read())
             print(int(restmp))
         except:
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=failedExplorer)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
@@ -378,20 +378,20 @@ class depositAdeptioApproval(Resource):
 
                     if count and count > 0:
                         cursorLG.execute("replace into adeptio_balances set login=%s, balance=%s, lastdepositwlt=%s;", (account, setNewAdeptioBalance, None))
-                        cursor.close()
+                        cursorLG.close()
                         return jsonify(data=success)
                     else:
-                        cursor.close()
+                        cursorLG.close()
                         return jsonify(data=failedCount)
                 else:
-                    cursor.close()
+                    cursorLG.close()
                     return jsonify(data=failedAmount)
             else:
-                cursor.close()
+                cursorLG.close()
                 return jsonify(data=failedwlt)
         else:
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=auth)
 
 
@@ -428,18 +428,18 @@ class withdrawAdeptio(Resource):
         count = int(request.args.get('count'))
 
         if len(wallet) != 34:
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=wrongWlt)
 
         if wallet[0] != 'A':
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=wrongWlt)
 
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", account)
         checkBalance = cursorLG.fetchall()
 
         if checkBalance[0]['balance'] < int(count):
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=notEnoughAdeptio)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
@@ -462,14 +462,14 @@ class withdrawAdeptio(Resource):
                 setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) - int(count))
 
                 cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
-                cursor.close()
+                cursorLG.close()
                 return jsonify(data=result.decode("utf-8"))
             else:
-                cursor.close()
+                cursorLG.close()
                 return jsonify(data=wrongAmount)
         else:
             print('Failed Adeptio withdrawal! Actual passw / user sent: ', userCheck[0]['password'], token)
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=auth)
 
 # Routes
