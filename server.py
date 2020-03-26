@@ -273,20 +273,20 @@ class register(Resource):
             if (re.search(regex, mail)):
                 try:
                     cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-                    cursor.close()
+                    cursorLG.close()
                     return jsonify(data=success)
                 except:
-                    cursor.close()
+                    cursorLG.close()
                     return jsonify(data=already)
             else:
                 print("Failed mail check")
                 print('email: ', mail)
-                cursor.close()
+                cursorLG.close()
                 return jsonify(data=fail)
         else:
             print("Failed username/password check")
             print('user/passw: ', user, passw)
-            cursor.close()
+            cursorLG.close()
             return jsonify(data=fail)
 
 
