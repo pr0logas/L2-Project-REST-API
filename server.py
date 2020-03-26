@@ -73,7 +73,7 @@ class getAdeptioUserInfo(Resource):
         cursorLG = createCursorLG()
         userAcc = request.args.get('account')
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", userAcc)
-        cursor.close()
+        cursorLG.close()
         return jsonify(data=cursorLG.fetchall())
 
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
