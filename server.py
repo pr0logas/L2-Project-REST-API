@@ -22,8 +22,6 @@ adeptio_BuyRate = 6000 # Set 1 Adeptio(ADE) = 6000 ADE
 
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
 con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
-cursor = con.cursor(DictCursor)
-cursorLG = con2.cursor(DictCursor)
 
 def get_real_ip():
     print (str(request.remote_addr) + ' Client initiated request ->')
@@ -34,7 +32,7 @@ def createCursor(): # Game db
     return cursor
 
 def createCursorLG(): # Login db
-    cursor = con.cursor(DictCursor)
+    cursor = con2.cursor(DictCursor)
     return cursor
 
 # Flask rules
@@ -72,7 +70,7 @@ class getUserInfo(Resource):
 # http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
 class getAdeptioUserInfo(Resource):
     def get(self):
-        cursor = createCursor()
+        cursorLG = createCursorLG()
         userAcc = request.args.get('account')
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", userAcc)
         cursor.close()
@@ -110,6 +108,7 @@ class getUserMoneyCount(Resource):
 class buyAdena(Resource):
     def get(self):
         cursor = createCursor()
+        cursorLG = createCursorLG()
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
@@ -186,6 +185,8 @@ class buyAdena(Resource):
 # http://127.0.0.1:9005/apiv1/sellAdena?owner=268481220&count=1234&token=540215452&account=adeptio
 class sellAdena(Resource):
     def get(self):
+        cursor = createCursor()
+        cursorLG = createCursorLG()
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
@@ -204,19 +205,23 @@ class sellAdena(Resource):
         try:
             print(int(adenaCountStatus[0]['count']))
         except:
+            cursor.close()
             return jsonify(data=charAdena)
 
         if onlineStatus[0]['online'] != 0:
+            cursor.close()
             return jsonify(data=loggedin)
         elif int(adenaCountStatus[0]['count']) <= 10000: # Check if user have enough adena to sell
-            print(1)
+            cursor.close()
             return jsonify(data=adenaFail2)
         elif int(count) < 10000:
-            print(2, int(count))
+            cursor.close()
             return jsonify(data=adenaFail2)
         elif int(adenaCountStatus[0]['count']) < int(count): # Check if user have enough adena to sell
+            cursor.close()
             return jsonify(data=adenaFail)
         elif account == '':
+            cursor.close()
             return jsonify(data=auth)
         else:
             # Start checking user passw
@@ -242,15 +247,18 @@ class sellAdena(Resource):
 
                     setAdeptioFinal = int((int(checkBalance[0]['balance']) + int(adeptioTopay)))
                     cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
+                    cursor.close()
                     return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
+                cursor.close()
                 return jsonify(data=auth)
 
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt
 class register(Resource):
 
     def get(self):
+        cursorLG = createCursorLG()
         already = json.loads('{"ERROR" : "User already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
         success = json.loads('{"SUCCESS" : "Registration successful. Now you can start a game. Collect some adena first and login to your control panel"}')
@@ -265,27 +273,34 @@ class register(Resource):
             if (re.search(regex, mail)):
                 try:
                     cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+                    cursor.close()
                     return jsonify(data=success)
                 except:
+                    cursor.close()
                     return jsonify(data=already)
             else:
                 print("Failed mail check")
                 print('email: ', mail)
+                cursor.close()
                 return jsonify(data=fail)
         else:
             print("Failed username/password check")
             print('user/passw: ', user, passw)
+            cursor.close()
             return jsonify(data=fail)
 
 
 class getOnline(Resource):
     def get(self):
+        cursor = createCursor()
         cursor.execute("select char_name from characters WHERE online=1;")
+        cursor.close()
         return jsonify(data=cursor.fetchall())
 
 # http://127.0.0.1:9005/apiv1/depositAdeptio?token=540215452&account=adeptio
 class depositAdeptio(Resource):
     def get(self):
+        cursorLG = createCursorLG()
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
@@ -301,14 +316,17 @@ class depositAdeptio(Resource):
             result = subprocess.check_output(command,shell=True).strip()
             onlyWlt = result.decode("utf-8")
             cursorLG.execute("update adeptio_balances set lastdepositwlt=%s WHERE login=%s;", (onlyWlt, account))
+            cursor.close()
             return jsonify(data=result.decode("utf-8"))
         else:
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
+            cursor.close()
             return jsonify(data=auth)
 
 # http://127.0.0.1:9005/apiv1/depositAdeptioApproval?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 class depositAdeptioApproval(Resource):
     def get(self):
+        cursorLG = createCursorLG()
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
@@ -331,6 +349,7 @@ class depositAdeptioApproval(Resource):
             restmp = int(response.read())
             print(int(restmp))
         except:
+            cursor.close()
             return jsonify(data=failedExplorer)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
@@ -359,15 +378,20 @@ class depositAdeptioApproval(Resource):
 
                     if count and count > 0:
                         cursorLG.execute("replace into adeptio_balances set login=%s, balance=%s, lastdepositwlt=%s;", (account, setNewAdeptioBalance, None))
+                        cursor.close()
                         return jsonify(data=success)
                     else:
+                        cursor.close()
                         return jsonify(data=failedCount)
                 else:
+                    cursor.close()
                     return jsonify(data=failedAmount)
             else:
+                cursor.close()
                 return jsonify(data=failedwlt)
         else:
             print('Failed Adeptio deposit! Actual passw / user sent: ', userCheck[0]['password'], token)
+            cursor.close()
             return jsonify(data=auth)
 
 
@@ -393,6 +417,7 @@ class getCryptoPrices(Resource):
 # http://127.0.0.1:9005/apiv1/withdrawAdeptio?token=540215452&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 class withdrawAdeptio(Resource):
     def get(self):
+        cursorLG = createCursorLG()
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         wrongAmount = json.loads('{"ERROR" : "Wrong amount"}')
         wrongWlt = json.loads('{"ERROR" : "Invalid wallet provided. Please check the wallet addr!"}')
@@ -403,15 +428,18 @@ class withdrawAdeptio(Resource):
         count = int(request.args.get('count'))
 
         if len(wallet) != 34:
+            cursor.close()
             return jsonify(data=wrongWlt)
 
         if wallet[0] != 'A':
+            cursor.close()
             return jsonify(data=wrongWlt)
 
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", account)
         checkBalance = cursorLG.fetchall()
 
         if checkBalance[0]['balance'] < int(count):
+            cursor.close()
             return jsonify(data=notEnoughAdeptio)
 
         cursorLG.execute("select password from accounts WHERE login=%s;", account)
@@ -434,11 +462,14 @@ class withdrawAdeptio(Resource):
                 setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) - int(count))
 
                 cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
+                cursor.close()
                 return jsonify(data=result.decode("utf-8"))
             else:
+                cursor.close()
                 return jsonify(data=wrongAmount)
         else:
             print('Failed Adeptio withdrawal! Actual passw / user sent: ', userCheck[0]['password'], token)
+            cursor.close()
             return jsonify(data=auth)
 
 # Routes
