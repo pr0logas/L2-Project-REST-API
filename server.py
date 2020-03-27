@@ -28,10 +28,12 @@ def get_real_ip():
     return (request.remote_addr)
 
 def createCursor(): # Game db
+    con.reconnect()
     cursor = con.cursor(DictCursor)
     return cursor
 
 def createCursorLG(): # Login db
+    con2.reconnect()
     cursor = con2.cursor(DictCursor)
     return cursor
 
