@@ -23,22 +23,17 @@ adeptio_BuyRate = 6000 # Set 1 Adeptio(ADE) = 6000 ADE
 con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
 con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
 
-con = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db'], autocommit=True)
-con2 = pymysql.connect(credentials['ip'],credentials['user'],credentials['passw'],credentials['db2'], autocommit=True)
-
-# if the connection was lost, then it reconnects
-con.ping(reconnect=True)
-con2.ping(reconnect=True)
-
 def get_real_ip():
     print (str(request.remote_addr) + ' Client initiated request ->')
     return (request.remote_addr)
 
 def createCursor(): # Game db
+    con.ping(reconnect=True)
     cursor = con.cursor(DictCursor)
     return cursor
 
 def createCursorLG(): # Login db
+    con2.ping(reconnect=True)
     cursor = con2.cursor(DictCursor)
     return cursor
 
