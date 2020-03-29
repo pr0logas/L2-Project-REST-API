@@ -121,10 +121,13 @@ class buyAdena(Resource):
         adeptioFail4 = json.loads('{"ERROR" : "Incorrect amount. At least 1 Adeptio (ADE) required"}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
+
         try:
-            count = int(request.args.get('count'))
+            print(int(request.args.get('count')))
         except:
             return jsonify(data=adeptioFail4)
+
+        count = int(request.args.get('count'))
 
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
@@ -429,9 +432,16 @@ class withdrawAdeptio(Resource):
         wrongAmount = json.loads('{"ERROR" : "Wrong amount"}')
         wrongWlt = json.loads('{"ERROR" : "Invalid wallet provided. Please check the wallet addr!"}')
         notEnoughAdeptio = json.loads('{"ERROR" : "You don\'t have enough Adeptio to withdraw this amount"}')
+        adeptioFail4 = json.loads('{"ERROR" : "Incorrect amount. At least 1 Adeptio (ADE) required"}')
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
         wallet = str(request.args.get('wlt'))
+
+        try:
+            print(int(request.args.get('count')))
+        except:
+            return jsonify(data=adeptioFail4)
+
         count = int(request.args.get('count'))
 
         if len(wallet) != 34:
