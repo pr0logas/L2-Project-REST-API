@@ -118,9 +118,14 @@ class buyAdena(Resource):
         adeptioFail = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation"}')
         adeptioFail2 = json.loads('{"ERROR" : "User don\'t have enough Adeptio(ADE) to perform this operation. At least 1 required"}')
         adeptioFail3 = json.loads('{"ERROR" : "At least 6000 Adena required to perform this operation."}')
+        adeptioFail4 = json.loads('{"ERROR" : "Incorrect amount. At least 1 Adeptio (ADE) required"}')
         account = str(request.args.get('account'))
         owner_id = str(request.args.get('owner'))
-        count = int(request.args.get('count'))
+        try:
+            count = int(request.args.get('count'))
+        except:
+            return jsonify(data=adeptioFail4)
+
         token = str(request.args.get('token'))
         cursor.execute("select online from characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
