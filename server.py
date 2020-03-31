@@ -455,6 +455,11 @@ class withdrawAdeptio(Resource):
         cursorLG.execute("select balance from adeptio_balances WHERE login=%s;", account)
         checkBalance = cursorLG.fetchall()
 
+        try:
+            print(checkBalance[0]['balance'])
+        except:
+            return jsonify(data=notEnoughAdeptio)
+
         if checkBalance[0]['balance'] < int(count):
             cursorLG.close()
             return jsonify(data=notEnoughAdeptio)
