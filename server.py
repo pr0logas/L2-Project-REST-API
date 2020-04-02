@@ -90,12 +90,9 @@ class getUserInfo(Resource):
         charData = cursor.fetchall()
 
         if str(charData) == '()':
-            print('No data')
+            return accountExists
         else:
-            print('Data found')
-        print(charData)
-
-        return jsonify(data=charData)
+            return jsonify(data=charData)
 
 # http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
 class getAdeptioUserInfo(Resource):
