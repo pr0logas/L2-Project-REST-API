@@ -78,7 +78,7 @@ class getUserInfo(Resource):
         cursorLG.close()
         result = cursorLG.fetchall()
         print(result)
-        accountExists = checkMail(result['data'][0])
+        accountExists = checkMail(result[0]['data'])
         print(accountExists)
 
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
