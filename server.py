@@ -81,8 +81,8 @@ class getUserInfo(Resource):
         result = cursorLG.fetchall()
         print(result)
         try:
-            checkMail = checkMail(result[0]['email'])
-            print('Checking if userAccount has a valid mail: ', checkMail)
+            mailRes = checkMail(result[0]['email'])
+            print('Checking if userAccount has a valid mail: ', mailRes)
         except:
             return accountNotExist
 
