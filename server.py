@@ -53,7 +53,6 @@ def checkInvalidChars(value):
         return 'FAIL'
 
 def checkMail(value):
-    print(value)
     regex = re.compile('@')
     if (regex.search(value) == None):
         return 'FAIL'
@@ -79,7 +78,7 @@ class getUserInfo(Resource):
         cursorLG.close()
         result = cursorLG.fetchall()
         print(result)
-        accountExists = checkMail(result[0])
+        accountExists = checkMail(result[0]['email'])
         print(accountExists)
 
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
