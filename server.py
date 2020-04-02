@@ -52,6 +52,13 @@ def checkInvalidChars(value):
     else:
         return 'FAIL'
 
+def checkMail(value):
+    regex = re.compile('@')
+    if (regex.search(value) == None):
+        return 'FAIL'
+    else:
+        return 'OK'
+
 # http://127.0.0.1:9005/apiv1/getInfo
 class getInfo(Resource):
     def get(self):
@@ -64,10 +71,20 @@ class getInfo(Resource):
 class getUserInfo(Resource):
     def get(self):
         cursor = createCursor()
+        cursorLG = createCursorLG()
         userAcc = request.args.get('account')
+
+        cursorLG.execute("select email from accounts where login=%s", (userAcc))
+        cursorLG.close()
+        result = cursorLG.fetchall()
+        accountExists = checkMail(result)
+        print(accountExists)
+
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         cursor.close()
-        return jsonify(data=cursor.fetchall())
+        data = cursor.fetchall()
+        print(data)
+        return jsonify(data=data)
 
 # http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
 class getAdeptioUserInfo(Resource):
