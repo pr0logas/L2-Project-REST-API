@@ -79,18 +79,23 @@ class getUserInfo(Resource):
         cursorLG.execute("select email from accounts where login=%s", (userAcc))
         cursorLG.close()
         result = cursorLG.fetchall()
-        print(result)
         try:
             mailRes = checkMail(result[0]['email'])
-            print('Checking if userAccount has a valid mail: ', mailRes)
+            print('Checking if userAccount has a valid email. Mail: ', mailRes)
         except:
             return accountNotExist
 
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         cursor.close()
-        data = cursor.fetchall()
-        print(data)
-        return jsonify(data=data)
+        charData = cursor.fetchall()
+
+        if charData == '()':
+            print('No data')
+        else:
+            print('Data found')
+        print(charData)
+
+        return jsonify(data=charData)
 
 # http://127.0.0.1:9005/apiv1/getAdeptioUserInfo?account=adeptio
 class getAdeptioUserInfo(Resource):
