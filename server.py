@@ -79,6 +79,7 @@ class getUserInfo(Resource):
         cursorLG.execute("select email from accounts where login=%s", (userAcc))
         cursorLG.close()
         result = cursorLG.fetchall()
+        print(result)
         try:
             checkMail = checkMail(result[0]['email'])
             print('Checking if userAccount has a valid mail: ', checkMail)
