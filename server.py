@@ -89,7 +89,7 @@ class getUserInfo(Resource):
         cursor.close()
         charData = cursor.fetchall()
 
-        if charData == '()':
+        if str(charData) == '()':
             print('No data')
         else:
             print('Data found')
