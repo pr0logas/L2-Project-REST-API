@@ -53,6 +53,7 @@ def checkInvalidChars(value):
         return 'FAIL'
 
 def checkMail(value):
+    print(value)
     regex = re.compile('@')
     if (regex.search(value) == None):
         return 'FAIL'
