@@ -70,6 +70,7 @@ class getInfo(Resource):
 # http://127.0.0.1:9005/apiv1/getInfo?account=adeptio
 class getUserInfo(Resource):
     def get(self):
+        accountNotExist = json.loads('{"ERROR" : "Account don\'t exists"}')
         cursor = createCursor()
         cursorLG = createCursorLG()
         userAcc = request.args.get('account')
@@ -77,9 +78,10 @@ class getUserInfo(Resource):
         cursorLG.execute("select email from accounts where login=%s", (userAcc))
         cursorLG.close()
         result = cursorLG.fetchall()
-        print(result)
-        accountExists = checkMail(result[0]['email'])
-        print(accountExists)
+        try:
+            accountExists = checkMail(result[0]['email'])
+        except:
+            return jsonify(data=accountNotExist)
 
         cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
         cursor.close()
