@@ -63,7 +63,25 @@ def checkMail(value):
 class getInfo(Resource):
     def get(self):
         cursor = createCursor()
-        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level`,classid from characters")
+        cursor.execute("SELECT char_name,account_name,onlinetime,pvpkills,charId,`level`,classid,clanid FROM characters")
+        cursor.close()
+        return jsonify(data=cursor.fetchall())
+
+
+# http://127.0.0.1:9005/apiv1/getClans?
+class getClans(Resource):
+    def get(self):
+        cursor = createCursor()
+        cursor.execute("SELECT clan_name,reputation_score,hasCastle,ally_name,leader_id FROM clan_data;")
+        cursor.close()
+        return jsonify(data=cursor.fetchall())
+
+# http://127.0.0.1:9005/apiv1/getUserClan?clanId=268518907
+class getUserClan(Resource):
+    def get(self):
+        clanNum = request.args.get('clanId')
+        cursor = createCursor()
+        cursor.execute("SELECT clan_name,reputation_score,hasCastle,ally_name FROM clan_data WHERE clan_id=%s", clanNum)
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
@@ -85,7 +103,7 @@ class getUserInfo(Resource):
         except:
             return accountNotExist
 
-        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level`,classid from characters WHERE "
+        cursor.execute("SELECT char_name,account_name,onlinetime,pvpkills,charId,`level`,classid,clanid FROM characters WHERE "
                        "account_name=%s", userAcc)
         cursor.close()
         charData = cursor.fetchall()
