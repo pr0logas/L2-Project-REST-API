@@ -25,3 +25,7 @@ https://l2-api.adeptio.cc/apiv1/depositAdeptio?account=apelsinas&token=MNDxFzAgd
 https://l2-api.adeptio.cc/apiv1/depositAdeptioApproval?token=MNDxFzAdH1z74nBFgIGwMLeleKsA=&account=adeptio&wlt=AGKpzTYSQrVTBshqXLyhja9hhBtDEv3rNn&count=123
 
 https://l2-api.adeptio.cc/apiv1/withdrawAdeptio?token=MNDxFzAdH1z74nBFIgGwMLeleKsA=&account=apelsinas&wlt=AMDVznJGDr1iJt22NCfzJAyrA4d3enrEVk&count=1
+
+https://l2-api.adeptio.cc/apiv1/getUserClan?clanId=26851890
+
+https://l2-api.adeptio.cc/apiv1/getClans?
