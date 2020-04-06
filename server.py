@@ -541,6 +541,8 @@ class withdrawAdeptio(Resource):
 # Routes
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getOnline, '/getOnline')
+api.add_resource(getClans, '/getClans')
+api.add_resource(getUserClan, '/getUserClan')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getCryptoPrices, '/getCryptoPrices')
 api.add_resource(getAdeptioUserInfo, '/getAdeptioUserInfo')
