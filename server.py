@@ -63,7 +63,7 @@ def checkMail(value):
 class getInfo(Resource):
     def get(self):
         cursor = createCursor()
-        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters")
+        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level`,classid from characters")
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
@@ -85,7 +85,8 @@ class getUserInfo(Resource):
         except:
             return accountNotExist
 
-        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level` from characters WHERE account_name=%s;", userAcc)
+        cursor.execute("select char_name,account_name,onlinetime,pvpkills,charId,`level`,classid from characters WHERE "
+                       "account_name=%s", userAcc)
         cursor.close()
         charData = cursor.fetchall()
 
