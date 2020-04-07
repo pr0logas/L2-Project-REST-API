@@ -67,6 +67,15 @@ class getInfo(Resource):
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
+# http://127.0.0.1:9005/apiv1/getWealth
+class getWealth(Resource):
+    def get(self):
+        cursor = createCursor()
+        cursor.execute("SELECT char_name,`level`,classid,clanid FROM characters UNION ALL "
+                       "SELECT count AS adena FROM items WHERE item_id=57;")
+        cursor.close()
+        return jsonify(data=cursor.fetchall())
+
 
 # http://127.0.0.1:9005/apiv1/getClans?
 class getClans(Resource):
@@ -542,6 +551,7 @@ class withdrawAdeptio(Resource):
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getOnline, '/getOnline')
 api.add_resource(getClans, '/getClans')
+api.add_resource(getWealth, '/getWealth')
 api.add_resource(getUserClan, '/getUserClan')
 api.add_resource(getUserInfo, '/getUserInfo')
 api.add_resource(getCryptoPrices, '/getCryptoPrices')

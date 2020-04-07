@@ -29,3 +29,5 @@ https://l2-api.adeptio.cc/apiv1/withdrawAdeptio?token=MNDxFzAdH1z74nBFIgGwMLeleK
 https://l2-api.adeptio.cc/apiv1/getUserClan?clanId=26851890
 
 https://l2-api.adeptio.cc/apiv1/getClans?
+
+https://l2-api.adeptio.cc/apiv1/getWealth?
