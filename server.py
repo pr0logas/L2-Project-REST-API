@@ -63,7 +63,8 @@ def checkMail(value):
 class getInfo(Resource):
     def get(self):
         cursor = createCursor()
-        cursor.execute("SELECT char_name,account_name,onlinetime,pvpkills,charId,`level`,classid,clan_data.clan_name FROM characters"
+        cursor.execute("SELECT characters.char_name, characters.account_name, characters.onlinetime, characters.pvpkills, "
+                       "characters.charId, characters.level characters.classid, clan_data.clan_name FROM characters "
                        "INNER JOIN clan_data ON characters.clanid=clan_data.clan_id")
         cursor.close()
         return jsonify(data=cursor.fetchall())
