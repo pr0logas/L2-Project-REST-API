@@ -339,8 +339,6 @@ class register(Resource):
         cursorLG.execute("SELECT email FROM accounts WHERE email=%s;", mail)
         checkMail = cursorLG.fetchall()
 
-        print(str(checkMail[0]['email']))
-
         if str(checkMail[0]['email']) == mail:
             return jsonify(data=alreadyMail)
 
