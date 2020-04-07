@@ -339,8 +339,11 @@ class register(Resource):
         cursorLG.execute("SELECT email FROM accounts WHERE email=%s;", mail)
         checkMail = cursorLG.fetchall()
 
-        if str(checkMail[0]['email']) == mail:
-            return jsonify(data=alreadyMail)
+        try:
+            if str(checkMail[0]['email']) == mail:
+                return jsonify(data=alreadyMail)
+        except:
+            pass
 
         # Query start
         if user != '' and passw != '':
