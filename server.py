@@ -71,8 +71,8 @@ class getInfo(Resource):
 class getWealth(Resource):
     def get(self):
         cursor = createCursor()
-        cursor.execute("SELECT char_name,`level`,classid,clanid FROM characters UNION ALL "
-                       "SELECT count AS adena FROM items WHERE item_id=57;")
+        cursor.execute("SELECT characters.char_name, characters.level, characters.classid, characters.clanid, items.count "
+                       "FROM characters INNER JOIN items ON characters.charId=items.owner_id WHERE item_id=57;")
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
