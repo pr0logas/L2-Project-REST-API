@@ -334,6 +334,15 @@ class register(Resource):
         regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
         hashBase64 = base64.b64encode(hashlib.sha1(passw.encode('utf8')).digest())
 
+        # Check if mail exists?
+        cursorLG.execute("SELECT email FROM accounts WHERE email=%s;", mail)
+        checkMail = cursorLG.fetchall()
+
+        print(str(checkMail[0]['email']))
+
+        if str(checkMail[0]['email']) == mail:
+            return jsonify(data=already)
+
         # Query start
         if user != '' and passw != '':
             if (re.search(regex, mail)):
