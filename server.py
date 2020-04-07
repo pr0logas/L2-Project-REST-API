@@ -72,7 +72,7 @@ class getWealth(Resource):
     def get(self):
         cursor = createCursor()
         cursor.execute("SELECT characters.char_name, characters.level, characters.classid, characters.clanid, items.count "
-                       "FROM characters INNER JOIN items ON characters.charId=items.owner_id WHERE item_id=57 AND loc=INVENTORY "
+                       "FROM characters INNER JOIN items ON characters.charId=items.owner_id WHERE item_id=57 AND loc='INVENTORY' "
                        "GROUP BY count ORDER BY count DESC;")
         cursor.close()
         return jsonify(data=cursor.fetchall())
