@@ -326,6 +326,7 @@ class register(Resource):
     def get(self):
         cursorLG = createCursorLG()
         already = json.loads('{"ERROR" : "User already exists?"}')
+        alreadyMail = json.loads('{"ERROR" : "Email already exists?"}')
         fail = json.loads('{"ERROR" : "Invalid username/password or email. Please check your data"}')
         success = json.loads('{"SUCCESS" : "Registration successful. Now you can start a game. Collect some adena first and login to your control panel"}')
         user = str(request.args.get('user'))
@@ -341,7 +342,7 @@ class register(Resource):
         print(str(checkMail[0]['email']))
 
         if str(checkMail[0]['email']) == mail:
-            return jsonify(data=already)
+            return jsonify(data=alreadyMail)
 
         # Query start
         if user != '' and passw != '':
