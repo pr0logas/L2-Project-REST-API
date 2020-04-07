@@ -63,7 +63,8 @@ def checkMail(value):
 class getInfo(Resource):
     def get(self):
         cursor = createCursor()
-        cursor.execute("SELECT char_name,account_name,onlinetime,pvpkills,charId,`level`,classid,clanid FROM characters")
+        cursor.execute("SELECT char_name,account_name,onlinetime,pvpkills,charId,`level`,classid,clan_data.clan_name FROM characters"
+                       "INNER JOIN clan_data ON characters.clanid=clan_data.clan_id")
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
@@ -137,7 +138,7 @@ class getMoneyCount(Resource):
     def get(self):
         cursor = createCursor()
         userCharId = int(request.args.get('charId'))
-        cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", userCharId)
+        cursor.execute("SELECT count FROM items WHERE item_id=57 AND owner_id=%s;", userCharId)
         cursor.close()
         return jsonify(data=cursor.fetchall())
 
