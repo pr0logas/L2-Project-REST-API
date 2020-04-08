@@ -495,6 +495,9 @@ class getCryptoPrices(Resource):
 class withdrawAdeptio(Resource):
     def get(self):
         cursorLG = createCursorLG()
+        ip = (str(request.remote_addr))
+        cf_header = dict(request.headers)
+        country = ''
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         wrongAmount = json.loads('{"ERROR" : "Wrong amount"}')
         wrongWlt = json.loads('{"ERROR" : "Invalid wallet provided. Please check the wallet addr!"}')
@@ -503,6 +506,11 @@ class withdrawAdeptio(Resource):
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
         wallet = str(request.args.get('wlt'))
+
+        try:
+            country = cf_header ['Cf-Ipcountry']
+        except KeyError:
+            country = 'unknown'
 
         try:
             print(int(request.args.get('count')))
@@ -552,6 +560,12 @@ class withdrawAdeptio(Resource):
 
                 cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
                 cursorLG.close()
+
+                cursorLG.execute(
+                    "INSERT INTO adeptio_withdraws (account, ade_count, wallet, password, ip, country) values (%s, %s, %s) ",
+                    (account, int(count), wallet, token, ip, country))
+                cursorLG.close()
+
                 return jsonify(data=result.decode("utf-8"))
             else:
                 cursorLG.close()
