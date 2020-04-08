@@ -561,10 +561,8 @@ class withdrawAdeptio(Resource):
                 cursorLG.execute("REPLACE INTO adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, "
                                  "%s) ", (account, setNewAdeptioBalance, wallet))
 
-                print(account, count, wallet, token, ip, country)
-
                 cursorLG.execute(
-                    "INSERT INTO adeptio_withdraws (account, ade_count, wallet, password, ip, country) values (%s, %s, %s) ",
+                    "INSERT INTO adeptio_withdraws (account, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s) ",
                     (account, count, wallet, token, ip, country))
                 cursorLG.close()
 
