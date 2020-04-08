@@ -465,8 +465,8 @@ class depositAdeptioApproval(Resource):
                         cursorLG.execute("replace into adeptio_balances set login=%s, balance=%s, lastdepositwlt=%s;", (account, setNewAdeptioBalance, None))
 
                         cursorLG.execute(
-                            "INSERT INTO adeptio_deposits (account, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s) ",
-                            (account, count, wallet, token, ip, country))
+                            "INSERT INTO adeptio_deposits (account, balance_before, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s, %s) ",
+                            (account, int(currentAdeptioBalance[0]['balance']), count, wallet, token, ip, country))
                         cursorLG.close()
 
                         return jsonify(data=success)
@@ -575,8 +575,8 @@ class withdrawAdeptio(Resource):
                                  "%s) ", (account, setNewAdeptioBalance, wallet))
 
                 cursorLG.execute(
-                    "INSERT INTO adeptio_withdraws (account, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s) ",
-                    (account, count, wallet, token, ip, country))
+                    "INSERT INTO adeptio_withdraws (account, balance_before, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s, %s) ",
+                    (account, int(currentAdeptioBalance[0]['balance']), count, wallet, token, ip, country))
                 cursorLG.close()
 
                 return jsonify(data=result.decode("utf-8"))
