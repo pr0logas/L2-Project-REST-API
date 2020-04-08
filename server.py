@@ -404,6 +404,9 @@ class depositAdeptio(Resource):
 class depositAdeptioApproval(Resource):
     def get(self):
         cursorLG = createCursorLG()
+        ip = (str(request.remote_addr))
+        cf_header = dict(request.headers)
+        country = ''
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         failedwlt = json.loads('{"ERROR" : "This is not correct wallet to update the adeptio coins"}')
         failedCount = json.loads('{"ERROR" : "Unknown amount?"}')
@@ -417,6 +420,11 @@ class depositAdeptioApproval(Resource):
         account = str(request.args.get('account'))
         token = str(request.args.get('token'))
         count = int(request.args.get('count'))
+
+        try:
+            country = cf_header ['Cf-Ipcountry']
+        except KeyError:
+            country = 'unknown'
 
         # Read count from explorer
         req = urllib.request.Request(url, headers=header)
@@ -455,7 +463,12 @@ class depositAdeptioApproval(Resource):
 
                     if count and count > 0:
                         cursorLG.execute("replace into adeptio_balances set login=%s, balance=%s, lastdepositwlt=%s;", (account, setNewAdeptioBalance, None))
+
+                        cursorLG.execute(
+                            "INSERT INTO adeptio_deposits (account, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s) ",
+                            (account, count, wallet, token, ip, country))
                         cursorLG.close()
+
                         return jsonify(data=success)
                     else:
                         cursorLG.close()
