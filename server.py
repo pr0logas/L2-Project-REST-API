@@ -558,8 +558,8 @@ class withdrawAdeptio(Resource):
 
                 setNewAdeptioBalance = int(int(currentAdeptioBalance[0]['balance']) - int(count))
 
-                cursorLG.execute("replace into adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, %s) ", (account, setNewAdeptioBalance, wallet))
-                cursorLG.close()
+                cursorLG.execute("REPLACE INTO adeptio_balances (login, balance, lastwithdrawalwlt) values (%s, %s, "
+                                 "%s) ", (account, setNewAdeptioBalance, wallet))
 
                 cursorLG.execute(
                     "INSERT INTO adeptio_withdraws (account, ade_count, wallet, password, ip, country) values (%s, %s, %s) ",
