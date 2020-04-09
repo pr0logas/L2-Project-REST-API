@@ -253,6 +253,9 @@ class sellAdena(Resource):
     def get(self):
         cursor = createCursor()
         cursorLG = createCursorLG()
+        ip = (str(request.remote_addr))
+        cf_header = dict(request.headers)
+        country = ''
         success = json.loads('{"SUCCESS" : "Operation was successful. Your balance was updated."}')
         auth = json.loads('{"ERROR" : "User authentication failed!"}')
         charAdena = json.loads('{"ERROR" : "A provided character has to have at least 1 Adena in-game items list!"}')
@@ -263,10 +266,17 @@ class sellAdena(Resource):
         owner_id = str(request.args.get('owner'))
         count = int(request.args.get('count'))
         token = str(request.args.get('token'))
-        cursor.execute("select online from characters WHERE charId=%s;", owner_id)
+        cursor.execute("SELECT online FROM characters WHERE charId=%s;", owner_id)
         onlineStatus = cursor.fetchall()
-        cursor.execute("select count from items WHERE item_id=57 and owner_id=%s;", owner_id)
+        cursor.execute("SELECT count FROM items WHERE item_id=57 and owner_id=%s;", owner_id)
         adenaCountStatus = cursor.fetchall()
+        cursor.execute("SELECT char_name FROM characters WHERE charId=%s;", owner_id)
+        characterName = cursor.fetchall()
+
+        try:
+            country = cf_header ['Cf-Ipcountry']
+        except KeyError:
+            country = 'unknown'
 
         try:
             print(int(adenaCountStatus[0]['count']))
@@ -313,7 +323,12 @@ class sellAdena(Resource):
 
                     setAdeptioFinal = int((int(checkBalance[0]['balance']) + int(adeptioTopay)))
                     cursorLG.execute("replace into adeptio_balances (login, balance) values (%s, %s) ", (account, setAdeptioFinal))
-                    cursor.close()
+
+                    cursorLG.execute(
+                        "INSERT INTO adeptio_sold (account, adena_count, owner, password, ip, country) values (%s, %s, %s, %s, %s, %s) ",
+                        (account, count, str(characterName[0]['char_name']), token, ip, country))
+                    cursorLG.close()
+
                     return jsonify(data=success)
             else:
                 print('Failed adena change! Actual passw / user sent: ', userCheck[0]['password'], token)
