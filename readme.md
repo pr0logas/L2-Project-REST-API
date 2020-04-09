@@ -31,3 +31,7 @@ https://l2-api.adeptio.cc/apiv1/getUserClan?clanId=26851890
 https://l2-api.adeptio.cc/apiv1/getClans?
 
 https://l2-api.adeptio.cc/apiv1/getWealth?
+
+https://l2-api.adeptio.cc/apiv1/getUserBuyActivity?
+
+https://l2-api.adeptio.cc/apiv1/getUserSellActivity?

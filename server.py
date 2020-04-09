@@ -134,6 +134,24 @@ class getAdeptioUserInfo(Resource):
         cursorLG.close()
         return jsonify(data=cursorLG.fetchall())
 
+# http://127.0.0.1:9005/apiv1/getUserSellActivity?
+class getUserSellActivity(Resource):
+    def get(self):
+        cursorLG = createCursorLG()
+        cursorLG.execute("SELECT adena_count, created_time, country, adeptio_amount FROM adeptio_sold "
+                        "GROUP BY created_time ORDER BY created_time DESC LIMIT 15;")
+        cursorLG.close()
+        return jsonify(data=cursorLG.fetchall())
+
+# http://127.0.0.1:9005/apiv1/getUserBuyActivity?
+class getUserBuyActivity(Resource):
+    def get(self):
+        cursorLG = createCursorLG()
+        cursorLG.execute("SELECT adena_count, created_time, country, adeptio_amount FROM adeptio_bought "
+                        "GROUP BY created_time ORDER BY created_time DESC LIMIT 15;")
+        cursorLG.close()
+        return jsonify(data=cursorLG.fetchall())
+
 # http://127.0.0.1:9005/apiv1/getMoneyCount?charId=268481220
 class getMoneyCount(Resource):
     def get(self):
@@ -622,6 +640,8 @@ class withdrawAdeptio(Resource):
 api.add_resource(getInfo, '/getInfo')
 api.add_resource(getOnline, '/getOnline')
 api.add_resource(getClans, '/getClans')
+api.add_resource(getUserSellActivity, '/getUserSellActivity')
+api.add_resource(getUserBuyActivity, '/getUserBuyActivity')
 api.add_resource(getWealth, '/getWealth')
 api.add_resource(getUserClan, '/getUserClan')
 api.add_resource(getUserInfo, '/getUserInfo')
