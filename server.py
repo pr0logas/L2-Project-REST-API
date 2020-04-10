@@ -623,8 +623,9 @@ class withdrawAdeptio(Resource):
                                  "%s) ", (account, setNewAdeptioBalance, wallet))
 
                 cursorLG.execute(
-                    "INSERT INTO adeptio_withdraws (account, balance_before, ade_count, wallet, password, ip, country) values (%s, %s, %s, %s, %s, %s, %s) ",
-                    (account, int(currentAdeptioBalance[0]['balance']), count, wallet, token, ip, country))
+                    "INSERT INTO adeptio_withdraws (account, balance_before, ade_count, wallet, password, ip, "
+                    "country, txid) values (%s, %s, %s, %s, %s, %s, %s, %s) ",
+                    (account, int(currentAdeptioBalance[0]['balance']), count, wallet, token, ip, country, str(result)))
                 cursorLG.close()
 
                 return jsonify(data=result.decode("utf-8"))
