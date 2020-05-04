@@ -174,11 +174,13 @@ class register(Resource):
                 cursorLG.execute("DELETE FROM referral_code WHERE code=%s;", checkRef[0]['code'])
                 cursorLG.close()
 
-                try:
-                    cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
-                    cursorLG.close()
+                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);",
+                                 (user, hashBase64, mail))
+                cursorLG.close()
+                return jsonify(data=success)
 
-                    return jsonify(data=success)
+                try:
+                    print("aba")
                 except:
                     cursorLG.close()
                     return jsonify(data=already)
