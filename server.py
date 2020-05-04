@@ -165,8 +165,6 @@ class register(Resource):
         except:
             pass
 
-
-
         # Query start
         if user != '' and passw != '':
             if (re.search(regex, mail)):
