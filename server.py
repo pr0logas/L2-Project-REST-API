@@ -15,7 +15,6 @@ import hashlib, base64
 import subprocess
 import urllib.request
 from flask_cors import CORS
-from registration import register
 
 notFound = json.loads('{"ERROR" : "No data found"}')
 adeptio_rate = 10000 # Set 10000 Adena = 1 ADE
