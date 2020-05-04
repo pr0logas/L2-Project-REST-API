@@ -171,16 +171,13 @@ class register(Resource):
         if user != '' and passw != '':
             if (re.search(regex, mail)):
 
-                cursorLG.execute("DELETE FROM referral_code WHERE code=%s;", checkRef[0]['code'])
-                cursorLG.close()
-
-                cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);",
-                                 (user, hashBase64, mail))
-                cursorLG.close()
-                return jsonify(data=success)
-
                 try:
-                    print("aba")
+                    cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
+
+                    cursorLG.execute("DELETE FROM referral_code WHERE code=%s;", checkRef[0]['code'])
+                    cursorLG.close()
+
+                    return jsonify(data=success)
                 except:
                     cursorLG.close()
                     return jsonify(data=already)
