@@ -172,7 +172,7 @@ class register(Resource):
                     cursorLG.execute("insert into accounts (login, password, email) values (%s, %s, %s);", (user, hashBase64, mail))
                     cursorLG.close()
 
-                    cursorLG.execute("DELETE FROM referral_code WHERE code=%s;", (referral))
+                    cursorLG.execute("DELETE FROM referral_code WHERE code=%s;", checkRef[0]['code'])
                     cursorLG.close()
 
                     return jsonify(data=success)
