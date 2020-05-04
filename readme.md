@@ -35,3 +35,5 @@ https://l2-api.adeptio.cc/apiv1/getWealth?
 https://l2-api.adeptio.cc/apiv1/getUserBuyActivity?
 
 https://l2-api.adeptio.cc/apiv1/getUserSellActivity?
+
+https://l2-api.adeptio.cc/apiv1/preregister?&email=info@ababas.lt
