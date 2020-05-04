@@ -152,7 +152,7 @@ class preregister(Resource):
         # Query start
         if (re.search(regex, mail)):
             try:
-                cursorLG.execute("insert into pre_registration (email, lastIP) values (%s, %s);", (email, ip))
+                cursorLG.execute("insert into pre_registration (email, lastIP) values (%s, %s);", (mail, ip))
                 cursorLG.close()
                 return jsonify(data=success)
             except:
