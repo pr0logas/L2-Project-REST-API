@@ -132,7 +132,7 @@ class register(Resource):
 class getReferral(Resource):
     def get(self):
         success = json.loads('{"SUCCESS" : "OK"}')
-        fail = json.loads('{"ERROR" : "Not found"}')
+        fail = json.loads('{"ERROR" : "Referral dont\'t exist"}')
         ref = request.args.get('ref')
         cursor = createCursorLG()
         cursor.execute("SELECT code FROM referral_code WHERE code=%s", ref)
