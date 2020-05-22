@@ -131,11 +131,18 @@ class register(Resource):
 # http://127.0.0.1:9005/apiv1/getkReferral?ref=abcc
 class getReferral(Resource):
     def get(self):
+        success = json.loads('{"SUCCESS" : "OK"}')
+        fail = json.loads('{"ERROR" : "Not found"}')
         ref = request.args.get('ref')
         cursor = createCursorLG()
         cursor.execute("SELECT code FROM referral_code WHERE code=%s", ref)
         cursor.close()
-        return jsonify(data=cursor.fetchall())
+        checkRef = cursor.fetchall()
+
+        if str(checkRef[0]['code']) == ref:
+            return jsonify(data=success)
+        else:
+            return jsonify(data=fail)
 
 ### To create REF -> openssl rand -base64 3
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt&ref=aBc1
