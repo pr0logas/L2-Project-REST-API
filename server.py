@@ -139,9 +139,10 @@ class getReferral(Resource):
         cursor.close()
         checkRef = cursor.fetchall()
 
-        if str(checkRef[0]['code']) == ref:
-            return jsonify(data=success)
-        else:
+        try:
+            if str(checkRef[0]['code']) == ref:
+                return jsonify(data=success)
+        except:
             return jsonify(data=fail)
 
 ### To create REF -> openssl rand -base64 3
