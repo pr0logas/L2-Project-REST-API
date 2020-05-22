@@ -80,7 +80,6 @@ class getWealth(Resource):
         return jsonify(data=cursor.fetchall())
 
 ### Without REFERAL link;
-'''
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt
 class register(Resource):
 
@@ -126,7 +125,6 @@ class register(Resource):
             print('user/passw: ', user, passw)
             cursorLG.close()
             return jsonify(data=fail)
-'''
 
 # http://127.0.0.1:9005/apiv1/getkReferral?ref=abcc
 class getReferral(Resource):
@@ -146,7 +144,9 @@ class getReferral(Resource):
             return jsonify(data=fail)
 
 ### To create REF -> openssl rand -base64 3
+# With referral link
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt&ref=aBc1
+'''
 class register(Resource):
 
     def get(self):
@@ -207,7 +207,7 @@ class register(Resource):
             print('user/passw: ', user, passw)
             cursorLG.close()
             return jsonify(data=fail)
-
+'''
 
 # http://127.0.0.1:9005/apiv1/preregister?&email=info@ababas.lt
 class preregister(Resource):

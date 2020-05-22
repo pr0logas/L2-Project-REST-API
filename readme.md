@@ -38,4 +38,6 @@ https://l2-api.adeptio.cc/apiv1/getUserSellActivity?
 
 https://l2-api.adeptio.cc/apiv1/preregister?&email=info@ababas.lt
 
-https://l2-api.adeptio.cc/apiv1/register?user=test&passw=test&email=info@ababas.lt&ref=aBc1
+https://l2-api.adeptio.cc/apiv1/register?user=test&passw=test&email=info@ababas.lt
+
+https://l2-api.adeptio.cc/apiv1/getkReferral?ref=abcc
