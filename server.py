@@ -127,6 +127,16 @@ class register(Resource):
             cursorLG.close()
             return jsonify(data=fail)
 '''
+
+# http://127.0.0.1:9005/apiv1/getkReferral?ref=abcc
+class getReferral(Resource):
+    def get(self):
+        ref = request.args.get('ref')
+        cursor = createCursorLG()
+        cursor.execute("SELECT code FROM referral_code WHERE code=%s", ref)
+        cursor.close()
+        return jsonify(data=cursor.fetchall())
+
 ### To create REF -> openssl rand -base64 3
 # http://127.0.0.1:9005/apiv1/register?user=test&passw=test&email=info@ababas.lt&ref=aBc1
 class register(Resource):
@@ -750,6 +760,7 @@ api.add_resource(getUserBuyActivity, '/getUserBuyActivity')
 api.add_resource(getWealth, '/getWealth')
 api.add_resource(getUserClan, '/getUserClan')
 api.add_resource(getUserInfo, '/getUserInfo')
+api.add_resource(getReferral, '/getReferral')
 api.add_resource(getCryptoPrices, '/getCryptoPrices')
 api.add_resource(getAdeptioUserInfo, '/getAdeptioUserInfo')
 api.add_resource(getMoneyCount, '/getMoneyCount')
